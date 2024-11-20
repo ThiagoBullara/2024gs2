@@ -66,6 +66,8 @@ public class Recurso {
     }
 
     public Projeto getProjeto(){
+	    if(projeto == null)
+		projeto = new Projeto();
 	    return projeto;
     }
 

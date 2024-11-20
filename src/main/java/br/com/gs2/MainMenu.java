@@ -1,7 +1,6 @@
 package br.com.gs2;
 
 import br.com.gs2.exception.NotFoundException;
-import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -27,11 +26,11 @@ public class MainMenu {
                 escolha = scanner.nextInt();
                 
                 switch (escolha){
-			        case 1 -> ;
-			        case 2 -> ;
-                    case 3 -> ;
-                    case 4 -> ;
-                    case 5 -> ;
+			        case 1 -> System.out.println("");
+			        case 2 -> System.out.println("");
+                    case 3 -> System.out.println("");
+                    case 4 -> System.out.println("");
+                    case 5 -> System.out.println("");
                     case 0 ->
                         System.out.println("\nSaindo...");
                     default ->
@@ -40,9 +39,6 @@ public class MainMenu {
 		    } catch (InputMismatchException e){
 		        System.out.println("\nEntrada inválida. Por favor, insira um número.");
 		        scanner.nextLine();
-		        escolha = -1;
-		    } catch (NotFoundException e){
-		        System.out.println("\nErro: " + e.getMessage());
 		        escolha = -1;
 		    }
 	    } while (escolha != 0);

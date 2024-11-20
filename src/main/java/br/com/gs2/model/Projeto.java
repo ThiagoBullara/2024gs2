@@ -125,6 +125,8 @@ public class Projeto {
     }
 
     public Gestor getGestor(){
+	    if(gestor == null)
+		gestor = new Gestor();
 	    return gestor;
     }
 
@@ -134,6 +136,8 @@ public class Projeto {
     }
 
     public Equipe getEquipe(){
+	    if(equipe == null)
+		equipe = new Equipe();
 	    return equipe;
     }
 
