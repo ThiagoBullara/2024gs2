@@ -47,30 +47,14 @@ CREATE TABLE Relatorio (
   descricao VARCHAR2(300) NOT NULL,
   autor VARCHAR2(100) NOT NULL,
   dataEmissao DATE NOT NULL,
+  qtd_energia_gerada NUMBER(10,2),
+  eficiencia NUMBER(10,2),
+  validade DATE,
+  emissao_evitada NUMBER(10,2),
+  recursos_economizados NUMBER(10,2),
+  orcamento_geral NUMBER(10,2),
+  despesas NUMBER(10,2),
+  valorGerado NUMBER(10,2),
   FK_id_projeto NUMBER NOT NULL,
   CONSTRAINT FK_id_projeto FOREIGN KEY (FK_id_projeto) REFERENCES Projeto (id_Projeto)
 );
-
-CREATE TABLE Tecnologico (
-  FK_id_relatorio NUMBER NOT NULL,
-  CONSTRAINT FK_id_relatorio FOREIGN KEY (FK_id_relatorio) REFERENCES Projeto (id_relatorio),
-  qtd_energia_gerada NUMBER(10,2) NOT NULL,
-  eficiencia NUMBER(10,2) NOT NULL,
-  validade DATE NOT NULL
-);
-
-CREATE TABLE ImpactoAmbiental (
-  FK_id_relatorio NUMBER NOT NULL,
-  CONSTRAINT FK_id_relatorio FOREIGN KEY (FK_id_relatorio) REFERENCES Projeto (id_relatorio),
-  emissao_evitada NUMBER(10,2) NOT NULL,
-  recursos_economizados NUMBER(10,2) NOT NULL
-);
-
-CREATE TABLE Financeiro (
-  FK_id_relatorio NUMBER NOT NULL,
-  CONSTRAINT FK_id_relatorio FOREIGN KEY (FK_id_relatorio) REFERENCES Projeto (id_relatorio),
-  orcamento_geral NUMBER(10,2) NOT NULL,
-  despesas NUMBER(10,2) NOT NULL,
-  valorGerado NUMBER(10,2) NOT NULL
-);
-
