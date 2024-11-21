@@ -65,17 +65,25 @@ public class RecursoView
     {
 	Recurso novoRecurso = new Recurso();
 
-	System.out.println("Digite o tipo do recurso:");
+	System.out.print("\nDigite o tipo do recurso: ");
 	novoRecurso.setTipo(scanner.next() + scanner.nextLine());
-
-	System.out.println("Digite a quantidade do recurso:");
+	System.out.print("\nDigite a quantidade do recurso: ");
+	novoRecurso.setQuantidade(scanner.nextInt());
+	while (!scanner.hasNextInt())
+	{
+	    System.out.print("\nEntrada inválida. Digite um número inteiro: ");
+	    scanner.next();
+	}
 	novoRecurso.setQuantidade(scanner.nextInt());
 	scanner.nextLine();
-
-	System.out.println("Digite o custo unitário do recurso:");
-	novoRecurso.setCustoUnitario(scanner.nextDouble());
+	System.out.print("\nDigite o custo unitário do recurso: ");
+	while (!scanner.hasNextInt())
+	{
+	    System.out.print("\nEntrada inválida. Digite um número inteiro: ");
+	    scanner.next();
+	}
+	novoRecurso.setCustoUnitario(scanner.nextInt());
 	scanner.nextLine();
-
 	System.out.println("Digite o fornecedor do recurso:");
 	novoRecurso.setFornecedor(scanner.next() + scanner.nextLine());
 

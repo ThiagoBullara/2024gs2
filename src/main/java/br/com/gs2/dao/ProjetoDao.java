@@ -92,7 +92,7 @@ public class ProjetoDao implements AutoCloseable
     public Projeto select(int id) throws SQLException, NotFoundException
     {
 	String sql = """
-                 SELECT 
+                SELECT 
                      Projeto.id_projeto AS id,
                      Projeto.nome AS nome,
                      Projeto.tipo AS tipo,
@@ -103,24 +103,25 @@ public class ProjetoDao implements AutoCloseable
                      Projeto.orcamento AS orcamento,
                      Projeto.dataInicio AS dataInicio,
                      Projeto.dataTermino AS dataTermino,
-                     Gestor.id_gestor AS 'gestor.id',
-                     Gestor.nome AS 'gestor.nome',
-                     Gestor.email AS 'gestor.email',
-                     Gestor.telefone AS 'gestor.telefone',
-                     Gestor.descricao AS 'gestor.descricao',
-                     Equipe.id_equipe AS 'equipe.id',
-                     Equipe.especialidade AS 'equipe.especialidade',
-                     Equipe.email AS 'equipe.email',
-                     Equipe.descricao AS 'equipe.descricao',
-                     Equipe.qtd_funcionarios AS 'equipe.qtdFuncionarios'
-                 FROM
+                     Gestor.id_gestor AS "gestor.id",
+                     Gestor.nome AS "gestor.nome",
+                     Gestor.email AS "gestor.email",
+                     Gestor.telefone AS "gestor.telefone",
+                     Gestor.descricao AS "gestor.descricao",
+                     Equipe.id_equipe AS "equipe.id",
+                     Equipe.nome AS "equipe.nome",					 
+                     Equipe.especialidade AS "equipe.especialidade",
+                     Equipe.email AS "equipe.email",
+                     Equipe.descricao AS "equipe.descricao",
+                     Equipe.qtd_funcionarios AS "equipe.qtdFuncionarios"
+                FROM
                      Projeto
-			JOIN
-		    Gestor ON Projeto.Fk_id_gestor = Gestor.id_gestor
-			JOIN
-		    Equipe ON Projeto.FK_id_equipe = Equipe.id_equipe
-                 WHERE
-                     Projeto.id_projeto = ?""";
+				JOIN
+					 Gestor ON Projeto.Fk_id_gestor = Gestor.id_gestor
+				JOIN
+					 Equipe ON Projeto.FK_id_equipe = Equipe.id_equipe
+				WHERE
+					 Projeto.id_projeto = ?""";
 
 	try (PreparedStatement stm = conexao.prepareStatement(sql))
 	{
@@ -154,6 +155,7 @@ public class ProjetoDao implements AutoCloseable
 			    .setDescricao(result.getString("gestor.descricao")))
 			.setEquipe(new Equipe()
 			    .setIdEquipe(result.getInt("equipe.id"))
+				.setNome(result.getString("equipe.nome"))
 			    .setEspecialidade(result.getString("equipe.especialidade"))
 			    .setEmail(result.getString("equipe.email"))
 			    .setDescricao(result.getString("equipe.descricao"))
@@ -176,22 +178,23 @@ public class ProjetoDao implements AutoCloseable
 		    Projeto.orcamento AS orcamento,
 		    Projeto.dataInicio AS dataInicio,
 		    Projeto.dataTermino AS dataTermino,
-		    Gestor.id_gestor AS 'gestor.id',
-		    Gestor.nome AS 'gestor.nome',
-		    Gestor.email AS 'gestor.email',
-		    Gestor.telefone AS 'gestor.telefone',
-		    Gestor.descricao AS 'gestor.descricao',
-		    Equipe.id_equipe AS 'equipe.id',
-		    Equipe.especialidade AS 'equipe.especialidade',
-		    Equipe.email AS 'equipe.email',
-		    Equipe.descricao AS 'equipe.descricao',
-		    Equipe.qtd_funcionarios AS 'equipe.qtdFuncionarios'
+		    Gestor.id_gestor AS "gestor.id",
+		    Gestor.nome AS "gestor.nome",
+		    Gestor.email AS "gestor.email",
+		    Gestor.telefone AS "gestor.telefone",
+		    Gestor.descricao AS "gestor.descricao",
+		    Equipe.id_equipe AS "equipe.id",
+            Equipe.nome AS "equipe.nome",					 
+		    Equipe.especialidade AS "equipe.especialidade",
+		    Equipe.email AS "equipe.email",
+		    Equipe.descricao AS "equipe.descricao",
+		    Equipe.qtd_funcionarios AS "equipe.qtdFuncionarios"
 		FROM
 		    Projeto
-		       JOIN
-		   Gestor ON Projeto.FK_id_gestor = Gestor.id_gestor
-		       JOIN
-		   Equipe ON Projeto.FK_id_projeto = Equipe.id_equipe""";
+		JOIN
+		    Gestor ON Projeto.FK_id_gestor = Gestor.id_gestor
+		JOIN
+		    Equipe ON Projeto.FK_id_equipe = Equipe.id_equipe""";
 
 	List<Projeto> lista = new ArrayList<>();
 
@@ -226,6 +229,7 @@ public class ProjetoDao implements AutoCloseable
 			    .setDescricao(result.getString("gestor.descricao")))
 			.setEquipe(new Equipe()
 			    .setIdEquipe(result.getInt("equipe.id"))
+				.setNome(result.getString("equipe.nome"))
 			    .setEspecialidade(result.getString("equipe.especialidade"))
 			    .setEmail(result.getString("equipe.email"))
 			    .setDescricao(result.getString("equipe.descricao"))

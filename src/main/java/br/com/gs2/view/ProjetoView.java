@@ -98,8 +98,8 @@ public class ProjetoView
 	scanner.nextLine();
 
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-	novoProjeto.setDataInicio(lerData(scanner, formatter, "\nDigite a data de início do projeto (dd/MM/yyyy HH:mm): "));
-	novoProjeto.setDataTermino(lerData(scanner, formatter, "\nDigite a data de término do projeto (dd/MM/yyyy HH:mm): "));
+	novoProjeto.setDataInicio(lerData(scanner, formatter, "\nDigite a data de início do projeto no formato (dd/MM/yyyy HH:mm): "));
+	novoProjeto.setDataTermino(lerData(scanner, formatter, "\nDigite a data de término do projeto no formato (dd/MM/yyyy HH:mm): "));
 
 	try (Connection conexao = ConnectionFactory.getConnection();
 		EquipeDao equipeDao = new EquipeDao(conexao);
@@ -148,7 +148,7 @@ public class ProjetoView
 		    {
 			System.out.println("\nID: " + equipe.getIdEquipe() + " - Nome: " + equipe.getNome());
 		    }
-			System.out.print("Equipe: ");
+			System.out.print("\nEquipe: ");
 		    while (!scanner.hasNextInt())
 		    {
 			System.out.println("\nEntrada inválida. Digite um número inteiro.");
@@ -214,7 +214,7 @@ public class ProjetoView
 			{
 			    System.out.println("\nID: " + gestor.getIdGestor() + " - Nome: " + gestor.getNome());
 			}
-			System.out.print("Gestor: ");
+			System.out.print("\nGestor: ");
 			int gestorID = scanner.nextInt();
 			Gestor gestorSelecionado = gestores.stream()
 				.filter(gestor -> gestor.getIdGestor() == gestorID)
@@ -252,7 +252,7 @@ public class ProjetoView
 
     private static void select(Scanner scanner)
     {
-	System.out.println("Digite o código do projeto:");
+	System.out.print("\nDigite o código do projeto: ");
 	int id = scanner.nextInt();
 
 	try (Connection conexao = ConnectionFactory.getConnection();
@@ -261,47 +261,51 @@ public class ProjetoView
 
 	    Projeto projeto = projetoDao.select(id);
 
-	    System.out.println("Projeto encontrado:");
-	    System.out.println("ID: " + projeto.getIdProjeto());
+		System.out.println("\n-------------------------------------------------------");
+	    System.out.println("\nProjeto encontrado:");
+	    System.out.println("\nID: " + projeto.getIdProjeto());
 	    System.out.println("Nome: " + projeto.getNome());
 	    System.out.println("Tipo: " + projeto.getTipo());
 	    System.out.println("Descrição: " + projeto.getDescricao());
 	    System.out.println("Status: " + projeto.getStatus());
 	    System.out.println("Localização: " + projeto.getLocalizacao());
-	    System.out.println("Duração: " + projeto.getDuracao() + " meses");
+	    System.out.println("Duração: " + projeto.getDuracao() + " dias");
 	    System.out.println("Orçamento: R$ " + projeto.getOrcamento());
 	    System.out.println("Data de Início: " + projeto.getDataInicio());
 	    System.out.println("Data de Término: " + projeto.getDataTermino());
 
 	    if (projeto.getEquipe() != null)
 	    {
-		Equipe equipe = projeto.getEquipe();
-		System.out.println("Equipe associada:");
-		System.out.println("  ID: " + equipe.getIdEquipe());
-		System.out.println("  Nome: " + equipe.getNome());
-		System.out.println("  Especialidade: " + equipe.getEspecialidade());
-		System.out.println("  Email: " + equipe.getEmail());
+			Equipe equipe = projeto.getEquipe();
+			System.out.println("\nEquipe associada:");
+			System.out.println("\nID: " + equipe.getIdEquipe());
+			System.out.println("Nome: " + equipe.getNome());
+			System.out.println("Especialidade: " + equipe.getEspecialidade());
+			System.out.println("Email: " + equipe.getEmail());
 	    } else
 	    {
-		System.out.println("Nenhuma equipe associada.");
+			System.out.println("\nNenhuma equipe associada.");
+			System.out.println("\n-------------------------------------------------------");
 	    }
 
 	    if (projeto.getGestor() != null)
 	    {
 		Gestor gestor = projeto.getGestor();
-		System.out.println("Gestor associado:");
-		System.out.println("  ID: " + gestor.getIdGestor());
-		System.out.println("  Nome: " + gestor.getNome());
-		System.out.println("  Email: " + gestor.getEmail());
-		System.out.println("  Telefone: " + gestor.getTelefone());
+		System.out.println("\nGestor associado:");
+		System.out.println("\nID: " + gestor.getIdGestor());
+		System.out.println("Nome: " + gestor.getNome());
+		System.out.println("Email: " + gestor.getEmail());
+		System.out.println("Telefone: " + gestor.getTelefone());
+		System.out.println("\n-------------------------------------------------------");
 	    } else
 	    {
-		System.out.println("Nenhum gestor associado.");
+		System.out.println("\nNenhum gestor associado.");
+		System.out.println("\n-------------------------------------------------------");
 	    }
 
 	} catch (SQLException | NotFoundException e)
 	{
-	    System.err.println("Erro ao pesquisar projeto: " + e.getMessage());
+	    System.err.print("\nErro ao pesquisar projeto: \n" + e.getMessage() + "\n");
 	}
     }
 
@@ -315,28 +319,29 @@ public class ProjetoView
 
 	    if (projetos.isEmpty())
 	    {
-		System.out.println("Nenhum projeto encontrado.");
+		System.out.println("\nNenhum projeto encontrado.");
 		return;
 	    }
 
-	    System.out.println("Lista de projetos:");
+	    System.out.println("\nLista de projetos:");
 	    for (Projeto projeto : projetos)
 	    {
-		System.out.println("ID: " + projeto.getIdProjeto()
+		System.out.println("\nID: " + projeto.getIdProjeto()
 			+ " | Nome: " + projeto.getNome()
 			+ " | Status: " + projeto.getStatus()
 			+ " | Data de Início: " + projeto.getDataInicio());
+		System.out.println("\n-----------------------------------------------------------------------------------------");
 	    }
 
 	} catch (SQLException e)
 	{
-	    System.err.println("Erro ao listar projetos: " + e.getMessage());
+	    System.err.println("\nErro ao listar projetos: \n" + e.getMessage() + "\n");
 	}
     }
 
     private static void update(Scanner scanner)
     {
-	System.out.println("Digite o código do projeto que deseja atualizar:");
+	System.out.print("\nDigite o código do projeto que deseja atualizar: ");
 	int id = scanner.nextInt();
 	scanner.nextLine();
 
@@ -349,100 +354,100 @@ public class ProjetoView
 	    Projeto projeto = projetoDao.select(id);
 	    if (projeto == null)
 	    {
-		System.out.println("Projeto não encontrado.");
+		System.out.println("\nProjeto não encontrado.");
 		return;
 	    }
 
-	    System.out.println("Digite o novo nome do projeto:");
+	    System.out.print("\nDigite o novo nome do projeto: ");
 	    projeto.setNome(scanner.next() + scanner.nextLine());
-	    System.out.println("Digite o novo tipo do projeto:");
+	    System.out.print("\nDigite o novo tipo do projeto: ");
 	    projeto.setTipo(scanner.next() + scanner.nextLine());
-	    System.out.println("Digite uma nova descrição para o projeto:");
+	    System.out.print("\nDigite uma nova descrição para o projeto: ");
 	    projeto.setDescricao(scanner.next() + scanner.nextLine());
-	    System.out.println("Digite o novo status do projeto:");
+	    System.out.print("\nDigite o novo status do projeto: ");
 	    projeto.setStatus(scanner.next() + scanner.nextLine());
-	    System.out.println("Digite a nova localização do projeto:");
+	    System.out.print("\nDigite a nova localização do projeto: ");
 	    projeto.setLocalizacao(scanner.next() + scanner.nextLine());
-	    System.out.println("Digite a nova duração do projeto (em dias):");
+	    System.out.print("\nDigite a nova duração do projeto (em dias): ");
 	    while (!scanner.hasNextInt())
 	    {
-		System.out.println("Entrada inválida. Digite um número inteiro.");
+		System.out.println("\nEntrada inválida. Digite um número inteiro.");
 		scanner.next();
 	    }
 	    projeto.setDuracao(scanner.nextInt());
 	    scanner.nextLine();
 
-	    System.out.println("Digite o novo orçamento do projeto:");
+	    System.out.print("\nDigite o novo orçamento do projeto: ");
 	    while (!scanner.hasNextDouble())
 	    {
-		System.out.println("Entrada inválida. Digite um número decimal.");
+		System.out.println("\nEntrada inválida. Digite um número decimal.");
 		scanner.next();
 	    }
 	    projeto.setOrcamento(scanner.nextDouble());
 	    scanner.nextLine();
 
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-	    projeto.setDataInicio(lerData(scanner, formatter, "Digite a nova data de início do projeto (dd/MM/yyyy HH:mm):"));
-	    projeto.setDataTermino(lerData(scanner, formatter, "Digite a nova data de término do projeto (dd/MM/yyyy HH:mm):"));
+	    projeto.setDataInicio(lerData(scanner, formatter, "\nDigite a nova data de início do projeto no formato (dd/MM/yyyy HH:mm): "));
+	    projeto.setDataTermino(lerData(scanner, formatter, "\nDigite a nova data de término do projeto no formato (dd/MM/yyyy HH:mm): "));
 
-	    System.out.println("Deseja alterar o gestor do projeto? (S/N)");
+	    System.out.print("\nDeseja alterar o gestor do projeto? (S/N): ");
 	    String alterarGestor = scanner.nextLine();
 	    if (alterarGestor.equalsIgnoreCase("S"))
 	    {
-		System.out.println("Lista de gestores disponíveis:");
+		System.out.println("\nLista de gestores disponíveis:");
 		List<Gestor> gestores = gestorDao.search();
 		for (Gestor gestor : gestores)
 		{
-		    System.out.println("ID: " + gestor.getIdGestor() + " - " + gestor.getNome());
+		    System.out.println("\nID: " + gestor.getIdGestor() + " - Nome: " + gestor.getNome());
 		}
 
-		System.out.println("Digite o ID do novo gestor:");
+		System.out.print("\nDigite o ID do novo gestor: ");
 		int idGestor = scanner.nextInt();
 		scanner.nextLine();
 		Gestor gestor = gestorDao.select(idGestor);
 		if (gestor == null)
 		{
-		    System.out.println("Gestor não encontrado. Operação cancelada.");
+		    System.out.println("\nGestor não encontrado. Operação cancelada.");
 		    return;
 		}
 		projeto.setGestor(gestor);
 	    }
 
-	    System.out.println("Deseja alterar a equipe do projeto? (S/N)");
+	    System.out.print("\nDeseja alterar a equipe do projeto? (S/N): ");
 	    String alterarEquipe = scanner.nextLine();
 	    if (alterarEquipe.equalsIgnoreCase("S"))
 	    {
-		System.out.println("Lista de equipes disponíveis:");
+		System.out.println("\nLista de equipes disponíveis:");
 		List<Equipe> equipes = equipeDao.search();
 		for (Equipe equipe : equipes)
 		{
-		    System.out.println("ID: " + equipe.getIdEquipe() + " - " + equipe.getNome());
+		    System.out.println("\nID: " + equipe.getIdEquipe() + " - Nome: " + equipe.getNome());
 		}
 
-		System.out.println("Digite o ID da nova equipe:");
+		System.out.print("\nDigite o ID da nova equipe: ");
 		int idEquipe = scanner.nextInt();
 		scanner.nextLine(); 
 		Equipe equipe = equipeDao.select(idEquipe);
 		if (equipe == null)
 		{
-		    System.out.println("Equipe não encontrada. Operação cancelada.");
+		    System.out.println("\nEquipe não encontrada. Operação cancelada.");
 		    return;
 		}
 		projeto.setEquipe(equipe);
 	    }
 
 	    projetoDao.update(projeto);
-	    System.out.println("Projeto atualizado com sucesso!");
+	    System.out.println("\nProjeto atualizado com sucesso!");
 
 	} catch (SQLException | NotFoundException e)
 	{
-	    System.err.println("Erro ao atualizar projeto: " + e.getMessage());
+	    System.err.println("\nErro ao atualizar projeto: \n" + e.getMessage() + "\n");
 	}
     }
 
     private static void delete(Scanner scanner)
     {
-	System.out.println("Digite o código do projeto que deseja remover:");
+	System.out.print("\nDigite o código do projeto que deseja remover: ");
 	int id = scanner.nextInt();
 	scanner.nextLine();
 
@@ -453,24 +458,24 @@ public class ProjetoView
 	    Projeto projeto = projetoDao.select(id);
 	    if (projeto == null)
 	    {
-		System.out.println("Projeto não encontrado.");
+		System.out.println("\nProjeto não encontrado.");
 		return;
 	    }
 
-	    System.out.println("Tem certeza que deseja remover o projeto " + projeto.getNome() + "? (S/N)");
+	    System.out.print("\nTem certeza que deseja remover o projeto " + projeto.getNome() + "? (S/N): ");
 	    String confirmacao = scanner.nextLine();
 	    if (!confirmacao.equalsIgnoreCase("S"))
 	    {
-		System.out.println("Operação cancelada.");
+		System.out.println("\nOperação cancelada.");
 		return;
 	    }
 
 	    projetoDao.delete(id);
-	    System.out.println("Projeto removido com sucesso!");
+	    System.out.println("\nProjeto removido com sucesso!");
 
 	} catch (SQLException | NotFoundException e)
 	{
-	    System.err.println("Erro ao remover projeto: " + e.getMessage());
+	    System.err.println("\nErro ao remover projeto: \n" + e.getMessage() + "\n");
 	}
     }
 
@@ -486,7 +491,7 @@ public class ProjetoView
 		data = LocalDateTime.parse(input, formatter);
 	    } catch (DateTimeParseException e)
 	    {
-		System.out.println("Formato inválido. Tente novamente.");
+		System.out.println("\nFormato inválido. Tente novamente.");
 	    }
 	}
 	return data;
