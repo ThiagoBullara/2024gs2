@@ -47,7 +47,7 @@ public class RelatorioDao implements AutoCloseable
     }
 
     @Override
-    public void close() throws Exception
+    public void close()
     {
 	try
 	{
@@ -359,6 +359,129 @@ public class RelatorioDao implements AutoCloseable
 	return relatorios;
     }
 
+    public List<Relatorio> search(Tipo tipoFiltro) throws SQLException
+    {
+	String sql = """
+        SELECT 
+            Relatorio.idRelatorio AS id,
+            Relatorio.descricao AS descricao,
+            Relatorio.autor AS autor,
+            Relatorio.dataEmissao AS dataEmissao,
+            Relatorio.tipoRelatorio AS tipoRelatorio,
+            Relatorio.orcamentoTotal AS orcamentoTotal,
+            Relatorio.despesas AS despesas,
+            Relatorio.valorGerado AS valorGerado,
+            Relatorio.emissaoEvitada AS emissaoEvitada,
+            Relatorio.recursosEconomizados AS recursosEconomizados,
+            Relatorio.qtdEnergiaGerada AS qtdEnergiaGerada,
+            Relatorio.eficiencia AS eficiencia,
+            Relatorio.validade AS validade,
+            Projeto.id AS 'projeto.id',
+            Projeto.nome AS 'projeto.nome',
+            Projeto.tipo AS 'projeto.tipo',
+            Projeto.descricao AS 'projeto.descricao',
+            Projeto.status AS 'projeto.status',
+            Projeto.localizacao AS 'projeto.localizacao',
+            Projeto.duracao AS 'projeto.duracao',
+            Projeto.orcamento AS 'projeto.orcamento',
+            Projeto.dataInicio AS 'projeto.dataInicio'
+        FROM
+            Relatorio
+        JOIN
+            Projeto ON Relatorio.Projeto_id = Projeto.idProjeto
+        JOIN
+            Gestor ON Projeto.Gestor_id = Gestor.idGestor
+        JOIN
+            Equipe ON Projeto.Equipe_id = Equipe.idEquipe
+        WHERE 
+            Relatorio.tipoRelatorio = ?
+        """;
+
+	List<Relatorio> relatorios = new ArrayList<>();
+
+	try (PreparedStatement stmt = conexao.prepareStatement(sql))
+	{
+	    stmt.setString(1, tipoFiltro.name());
+	    
+	    try (ResultSet result = stmt.executeQuery())
+	    {
+		while (result.next())
+		{
+		    String tipoRelatorio = result.getString("tipoRelatorio");
+		    Tipo tipo = Tipo.valueOf(tipoRelatorio.toUpperCase());
+		    Relatorio relatorio;
+
+		    switch (tipo)
+		    {
+			case FINANCEIRO ->
+			{
+			    relatorio = new Financeiro();
+			    ((Financeiro) relatorio).setOrcamentoTotal(result.getDouble("orcamentoTotal"));
+			    ((Financeiro) relatorio).setDespesas(result.getDouble("despesas"));
+			    ((Financeiro) relatorio).setValorGerado(result.getDouble("valorGerado"));
+			}
+			case IMPACTO_AMBIENTAL ->
+			{
+			    relatorio = new ImpactoAmbiental();
+			    ((ImpactoAmbiental) relatorio).setEmissaoEvitada(result.getDouble("emissaoEvitada"));
+			    ((ImpactoAmbiental) relatorio).setRecursosEconomizados(result.getDouble("recursosEconomizados"));
+			}
+			case TECNOLOGICO ->
+			{
+			    Timestamp dataValidade = result.getTimestamp("validade");
+			    relatorio = new Tecnologico();
+			    ((Tecnologico) relatorio).setValidade(dataValidade != null ? dataValidade.toLocalDateTime() : null);
+			    ((Tecnologico) relatorio).setQtdEnergiaGerada(result.getDouble("qtdEnergiaGerada"));
+			    ((Tecnologico) relatorio).setEficiencia(result.getDouble("eficiencia"));
+			}
+			default -> throw new IllegalArgumentException("Tipo desconhecido: " + tipoRelatorio);
+		    }
+
+		    Timestamp dataEmissao = result.getTimestamp("dataEmissao");
+
+		    relatorio.setIdRelatorio(result.getInt("id"));
+		    relatorio.setDescricao(result.getString("descricao"));
+		    relatorio.setAutor(result.getString("autor"));
+		    relatorio.setDataEmissao(dataEmissao != null ? dataEmissao.toLocalDateTime() : null);
+		    relatorio.setTipoRelatorio(tipo);
+
+		    Timestamp projetoDataInicio = result.getTimestamp("projeto.dataInicio");
+		    Timestamp projetoDataTermino = result.getTimestamp("projeto.dataTermino");
+
+		    Projeto projeto = new Projeto()
+			    .setIdProjeto(result.getInt("projeto.id"))
+			    .setNome(result.getString("projeto.nome"))
+			    .setTipo(result.getString("projeto.tipo"))
+			    .setDescricao(result.getString("projeto.descricao"))
+			    .setStatus(result.getString("projeto.status"))
+			    .setLocalizacao(result.getString("projeto.localizacao"))
+			    .setDuracao(result.getInt("projeto.duracao"))
+			    .setOrcamento(result.getDouble("projeto.orcamento"))
+			    .setDataInicio(projetoDataInicio != null ? projetoDataInicio.toLocalDateTime() : null)
+			    .setDataTermino(projetoDataTermino != null ? projetoDataTermino.toLocalDateTime() : null)
+			    .setGestor(new Gestor()
+				    .setIdGestor(result.getInt("gestor.id"))
+				    .setNome(result.getString("gestor.nome"))
+				    .setEmail(result.getString("gestor.email"))
+				    .setTelefone(result.getString("gestor.telefone"))
+				    .setDescricao(result.getString("gestor.descricao")))
+			    .setEquipe(new Equipe()
+				    .setIdEquipe(result.getInt("equipe.id"))
+				    .setEspecialidade(result.getString("equipe.especialidade"))
+				    .setEmail(result.getString("equipe.email"))
+				    .setDescricao(result.getString("equipe.descricao"))
+				    .setQtdFuncionarios(result.getInt("equipe.qtdFuncionarios")));
+
+		    relatorio.setProjeto(projeto);
+
+		    relatorios.add(relatorio);
+		}
+	    }
+	}
+
+	return relatorios;
+    }
+
     public void update(Relatorio relatorio) throws SQLException, NotFoundException
     {
 	String sql = """
@@ -388,42 +511,41 @@ public class RelatorioDao implements AutoCloseable
 		    ? Timestamp.valueOf(relatorio.getDataEmissao()) : null);
 	    stmt.setString(4, relatorio.getTipoRelatorio().name());
 	    stmt.setString(5, relatorio.getTipoRelatorio().name());
-	    
-	    
+
 	    if (relatorio instanceof Financeiro financeiro)
 	    {
 		stmt.setDouble(6, financeiro.getOrcamentoTotal());
 		stmt.setDouble(7, financeiro.getDespesas());
 		stmt.setDouble(8, financeiro.getValorGerado());
-		stmt.setNull(9, java.sql.Types.DOUBLE); 
-		stmt.setNull(10, java.sql.Types.DOUBLE); 
-		stmt.setNull(11, java.sql.Types.DOUBLE); 
-		stmt.setNull(12, java.sql.Types.DOUBLE); 
-		stmt.setNull(13, java.sql.Types.TIMESTAMP); 
+		stmt.setNull(9, java.sql.Types.DOUBLE);
+		stmt.setNull(10, java.sql.Types.DOUBLE);
+		stmt.setNull(11, java.sql.Types.DOUBLE);
+		stmt.setNull(12, java.sql.Types.DOUBLE);
+		stmt.setNull(13, java.sql.Types.TIMESTAMP);
 	    } else if (relatorio instanceof ImpactoAmbiental impactoAmbiental)
 	    {
-		stmt.setNull(6, java.sql.Types.DOUBLE); 
-		stmt.setNull(7, java.sql.Types.DOUBLE); 
-		stmt.setNull(8, java.sql.Types.DOUBLE); 
-		stmt.setDouble(9, impactoAmbiental.getEmissaoEvitada());
-		stmt.setDouble(10, impactoAmbiental.getRecursosEconomizados());
-		stmt.setNull(11, java.sql.Types.DOUBLE); 
-		stmt.setNull(12, java.sql.Types.DOUBLE); 
-		stmt.setNull(13, java.sql.Types.TIMESTAMP); 
-	    } else if (relatorio instanceof Tecnologico tecnologico)
-	    {
-		stmt.setNull(6, java.sql.Types.DOUBLE); 
+		stmt.setNull(6, java.sql.Types.DOUBLE);
 		stmt.setNull(7, java.sql.Types.DOUBLE);
 		stmt.setNull(8, java.sql.Types.DOUBLE);
-		stmt.setNull(9, java.sql.Types.DOUBLE); 
-		stmt.setNull(9, java.sql.Types.DOUBLE); 
+		stmt.setDouble(9, impactoAmbiental.getEmissaoEvitada());
+		stmt.setDouble(10, impactoAmbiental.getRecursosEconomizados());
+		stmt.setNull(11, java.sql.Types.DOUBLE);
+		stmt.setNull(12, java.sql.Types.DOUBLE);
+		stmt.setNull(13, java.sql.Types.TIMESTAMP);
+	    } else if (relatorio instanceof Tecnologico tecnologico)
+	    {
+		stmt.setNull(6, java.sql.Types.DOUBLE);
+		stmt.setNull(7, java.sql.Types.DOUBLE);
+		stmt.setNull(8, java.sql.Types.DOUBLE);
+		stmt.setNull(9, java.sql.Types.DOUBLE);
+		stmt.setNull(9, java.sql.Types.DOUBLE);
 		stmt.setDouble(11, tecnologico.getQtdEnergiaGerada());
 		stmt.setDouble(12, tecnologico.getEficiencia());
 		stmt.setTimestamp(13, tecnologico.getValidade() != null
 			? Timestamp.valueOf(tecnologico.getValidade()) : null);
 	    }
 
-	    stmt.setInt(13, relatorio.getIdRelatorio()); 
+	    stmt.setInt(13, relatorio.getIdRelatorio());
 
 	    int rowsUpdated = stmt.executeUpdate();
 

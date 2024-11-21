@@ -479,7 +479,7 @@ public class ProjetoView
 	}
     }
 
-    private static LocalDateTime lerData(Scanner scanner, DateTimeFormatter formatter, String mensagem)
+    public static LocalDateTime lerData(Scanner scanner, DateTimeFormatter formatter, String mensagem)
     {
 	LocalDateTime data = null;
 	while (data == null)
