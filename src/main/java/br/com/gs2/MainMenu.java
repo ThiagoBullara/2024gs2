@@ -5,6 +5,7 @@ import br.com.gs2.view.EquipeView;
 import br.com.gs2.view.GestorView;
 import br.com.gs2.view.ProjetoView;
 import br.com.gs2.view.RecursoView;
+import br.com.gs2.view.RelatorioView;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -30,7 +31,7 @@ public class MainMenu
 		    System.out.println("2 - Gestor");
 		    System.out.println("3 - Projeto");
 		    System.out.println("4 - Recurso");
-		    System.out.println("5 - Relatorio");
+		    System.out.println("5 - Relatório");
 		    System.out.println("0 - Sair\n");
 		    System.out.print("Opção: ");
 		    escolha = scanner.nextInt();
@@ -41,7 +42,7 @@ public class MainMenu
 			case 2 -> GestorView.menu(scanner);
 			case 3 -> ProjetoView.menu(scanner);
 			case 4 -> RecursoView.menu(scanner);
-			case 5 -> System.out.println("");
+			case 5 -> RelatorioView.menu(scanner);
 			case 0 ->
 			    System.out.println("\nSaindo...");
 			default ->

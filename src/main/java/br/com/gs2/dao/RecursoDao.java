@@ -89,15 +89,10 @@ public class RecursoDao implements AutoCloseable
 	String sql = """
                  SELECT 
 		    Recurso.idRecurso AS id,
-		    Recurso.nome AS nome,
 		    Recurso.tipo AS tipo,
-		    Recurso.descricao AS descricao,
-		    Recurso.status AS status,
-		    Recurso.localizacao AS localizacao,
-		    Recurso.duracao AS duracao,
-		    Recurso.orcamento AS orcamento,
-		    Recurso.dataInicio AS dataInicio,
-		    Recurso.dataTermino AS dataTermino,
+		    Recurso.quantidade AS quantidade,
+		    Recurso.custoUnitario AS custoUnitario,
+		    Recurso.fornecedor AS fornecedor,
 		    Projeto.id AS 'projeto.id',
 		    Projeto.nome AS 'projeto.nome',
 		    Projeto.tipo AS 'projeto.tipo',
@@ -183,15 +178,10 @@ public class RecursoDao implements AutoCloseable
 	String sql = """
 		SELECT 
 		    Recurso.idRecurso AS id,
-		    Recurso.nome AS nome,
 		    Recurso.tipo AS tipo,
-		    Recurso.descricao AS descricao,
-		    Recurso.status AS status,
-		    Recurso.localizacao AS localizacao,
-		    Recurso.duracao AS duracao,
-		    Recurso.orcamento AS orcamento,
-		    Recurso.dataInicio AS dataInicio,
-		    Recurso.dataTermino AS dataTermino,
+		    Recurso.quantidade AS quantidade,
+		    Recurso.custoUnitario AS custoUnitario,
+		    Recurso.fornecedor AS fornecedor,
 		    Projeto.id AS 'projeto.id',
 		    Projeto.nome AS 'projeto.nome',
 		    Projeto.tipo AS 'projeto.tipo',
@@ -272,7 +262,7 @@ public class RecursoDao implements AutoCloseable
 
     public void update(Recurso recurso) throws SQLException
     {
-	PreparedStatement stm = conexao.prepareStatement("UPDATE Recurso SET tipo = ?, quantidade = ?, custoUnitario = ?, forncedor = ?, Projeto_id = ? where Recurso.idRecurso= ?");
+	PreparedStatement stm = conexao.prepareStatement("UPDATE Recurso SET tipo = ?, quantidade = ?, custoUnitario = ?, fornecedor = ?, Projeto_id = ? where Recurso.idRecurso= ?");
 	stm.setString(1, recurso.getTipo());
 	stm.setInt(2, recurso.getQuantidade());
 	stm.setDouble(3, recurso.getCustoUnitario());
