@@ -37,11 +37,11 @@ public class RecursoDao implements AutoCloseable
 
     public int insert(Recurso recurso) throws SQLException
     {
-	String sql = "INSERT INTO Recurso (tipo, quantidade, custoUnitario, fornecedor, Projeto_id) VALUES (?, ?, ?, ?, ?)";
+	String sql = "INSERT INTO Recurso (tipo, quantidade, custo_unitario, fornecedor, FK_id_projeto) VALUES (?, ?, ?, ?, ?)";
 
 	try (PreparedStatement stm = conexao.prepareStatement(sql, new String[]
 	{
-	    "idRecurso"
+	    "id_recurso"
 	}))
 	{
 	    stm.setString(1, recurso.getTipo());
@@ -58,7 +58,7 @@ public class RecursoDao implements AutoCloseable
 		    return rs.getInt(1);
 		} else
 		{
-		    throw new SQLException("Erro ao obter ID gerado.");
+		    throw new SQLException("\nErro ao obter ID gerado.");
 		}
 	    }
 	}
@@ -80,7 +80,7 @@ public class RecursoDao implements AutoCloseable
 	    }
 	} catch (SQLException e)
 	{
-	    System.out.println("Erro ao fechar a conexão: " + e.getMessage());
+	    System.out.println("\nErro ao fechar a conexão: \n" + e.getMessage() + "\n");
 	}
     }
 
@@ -88,7 +88,7 @@ public class RecursoDao implements AutoCloseable
     {
 	String sql = """
                  SELECT 
-		    Recurso.idRecurso AS id,
+		    Recurso.id_recurso AS id,
 		    Recurso.nome AS nome,
 		    Recurso.tipo AS tipo,
 		    Recurso.descricao AS descricao,
@@ -98,7 +98,7 @@ public class RecursoDao implements AutoCloseable
 		    Recurso.orcamento AS orcamento,
 		    Recurso.dataInicio AS dataInicio,
 		    Recurso.dataTermino AS dataTermino,
-		    Projeto.id AS 'projeto.id',
+		    Projeto.id_projeto AS 'projeto.id',
 		    Projeto.nome AS 'projeto.nome',
 		    Projeto.tipo AS 'projeto.tipo',
 		    Projeto.descricao AS 'projeto.descricao',
@@ -108,16 +108,16 @@ public class RecursoDao implements AutoCloseable
 		    Projeto.orcamento AS 'projeto.orcamento',
 		    Projeto.dataInicio AS 'projeto.dataInicio',
 		    Projeto.dataTermino AS 'projeto.dataTermino',
-		    Gestor.id AS 'gestor.id',
+		    Gestor.id_gestor AS 'gestor.id',
 		    Gestor.nome AS 'gestor.nome',
 		    Gestor.email AS 'gestor.email',
 		    Gestor.telefone AS 'gestor.telefone',
 		    Gestor.descricao AS 'gestor.descricao',
-		    Equipe.id AS 'equipe.id',
+		    Equipe.id_equipe AS 'equipe.id',
 		    Equipe.especialidade AS 'equipe.especialidade',
 		    Equipe.email AS 'equipe.email',
 		    Equipe.descricao AS 'equipe.descricao',
-		    Equipe.qntFuncionarios AS 'equipe.qntFuncionarios'
+		    Equipe.qtd_funcionarios AS 'equipe.qtdFuncionarios'
                  FROM
                     Recurso
 			JOIN
@@ -136,7 +136,7 @@ public class RecursoDao implements AutoCloseable
 	    {
 		if (!result.next())
 		{
-		    throw new NotFoundException("Recurso não encontrado");
+		    throw new NotFoundException("\nRecurso não encontrado");
 		}
 		
 		Timestamp dataTimestamp = result.getTimestamp("projeto.dataInicio");
@@ -182,7 +182,7 @@ public class RecursoDao implements AutoCloseable
     {
 	String sql = """
 		SELECT 
-		    Recurso.idRecurso AS id,
+		    Recurso.id_recurso AS id,
 		    Recurso.nome AS nome,
 		    Recurso.tipo AS tipo,
 		    Recurso.descricao AS descricao,
@@ -192,7 +192,7 @@ public class RecursoDao implements AutoCloseable
 		    Recurso.orcamento AS orcamento,
 		    Recurso.dataInicio AS dataInicio,
 		    Recurso.dataTermino AS dataTermino,
-		    Projeto.id AS 'projeto.id',
+		    Projeto.id_projeto AS 'projeto.id',
 		    Projeto.nome AS 'projeto.nome',
 		    Projeto.tipo AS 'projeto.tipo',
 		    Projeto.descricao AS 'projeto.descricao',
@@ -202,16 +202,16 @@ public class RecursoDao implements AutoCloseable
 		    Projeto.orcamento AS 'projeto.orcamento',
 		    Projeto.dataInicio AS 'projeto.dataInicio',
 		    Projeto.dataTermino AS 'projeto.dataTermino',
-		    Gestor.id AS 'gestor.id',
+		    Gestor.id_gestor AS 'gestor.id',
 		    Gestor.nome AS 'gestor.nome',
 		    Gestor.email AS 'gestor.email',
 		    Gestor.telefone AS 'gestor.telefone',
 		    Gestor.descricao AS 'gestor.descricao',
-		    Equipe.id AS 'equipe.id',
+		    Equipe.id_equipe AS 'equipe.id',
 		    Equipe.especialidade AS 'equipe.especialidade',
 		    Equipe.email AS 'equipe.email',
 		    Equipe.descricao AS 'equipe.descricao',
-		    Equipe.qntFuncionarios AS 'equipe.qntFuncionarios'
+		    Equipe.qtd_funcionarios AS 'equipe.qtdFuncionarios'
 		    FROM
 		       Recurso
 			JOIN
@@ -288,7 +288,7 @@ public class RecursoDao implements AutoCloseable
 	stm.setInt(1, id);
 	int linha = stm.executeUpdate();
 	if (linha == 0)
-	    throw new NotFoundException("Recurso não encontrado para ser removido");
+	    throw new NotFoundException("\nRecurso não encontrado para ser removido");
     }
 
 }

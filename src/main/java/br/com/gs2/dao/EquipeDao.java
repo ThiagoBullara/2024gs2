@@ -32,11 +32,11 @@ public class EquipeDao implements AutoCloseable
 
     public int insert(Equipe equipe) throws SQLException
     {
-	String sql = "INSERT INTO Equipe (nome, especialidade, email, descricao, qtdFuncionarios) VALUES (?, ?, ?, ?, ?)";
+	String sql = "INSERT INTO Equipe (nome, especialidade, email, descricao, qtd_funcionarios) VALUES (?, ?, ?, ?, ?)";
 
 	try (PreparedStatement stm = conexao.prepareStatement(sql, new String[]
 	{
-	    "idEquipe"
+	    "id_equipe"
 	}))
 	{
 	    stm.setString(1, equipe.getNome());
@@ -53,7 +53,7 @@ public class EquipeDao implements AutoCloseable
 		    return rs.getInt(1);
 		} else
 		{
-		    throw new SQLException("Erro ao obter ID gerado.");
+		    throw new SQLException("\nErro ao obter ID gerado.");
 		}
 	    }
 	}
@@ -75,7 +75,7 @@ public class EquipeDao implements AutoCloseable
 	    }
 	} catch (SQLException e)
 	{
-	    System.out.println("Erro ao fechar a conexão: " + e.getMessage());
+	    System.out.println("\nErro ao fechar a conexão: " + e.getMessage());
 	}
     }
 
@@ -83,16 +83,16 @@ public class EquipeDao implements AutoCloseable
     {
 	String sql = """
                  SELECT 
-                     Equipe.idEquipe AS id,
+                     Equipe.id_equipe AS id,
                      Equipe.nome AS nome,
                      Equipe.especialidade AS especialidade,
                      Equipe.email AS email,
                      Equipe.descricao AS descricao,
-                     Equipe.qtdFuncionarios AS qtdFuncionarios
+                     Equipe.qtd_funcionarios AS qtdFuncionarios
                  FROM
                      Equipe
                  WHERE
-                     Equipe.idEquipe = ?""";
+                     Equipe.id_equipe = ?""";
 
 	try (PreparedStatement stm = conexao.prepareStatement(sql))
 	{
@@ -101,7 +101,7 @@ public class EquipeDao implements AutoCloseable
 	    {
 		if (!result.next())
 		{
-		    throw new NotFoundException("Equipe não encontrada");
+		    throw new NotFoundException("\nEquipe não encontrada");
 		}
 		return new Equipe()
 			.setIdEquipe(result.getInt("id"))
@@ -118,12 +118,12 @@ public class EquipeDao implements AutoCloseable
     {
 	String sql = """
 		SELECT 
-		    Equipe.idEquipe AS id,
+		    Equipe.id_equipe AS id,
 		    Equipe.nome AS nome,
 		    Equipe.especialidade AS especialidade,
 		    Equipe.email AS email,
 		    Equipe.descricao AS descricao,
-		    Equipe.qtdFuncionarios AS qtdFuncionarios
+		    Equipe.qtd_funcionarios AS qtdFuncionarios
 		FROM
 		    Equipe""";
 
@@ -150,7 +150,7 @@ public class EquipeDao implements AutoCloseable
 
     public void update(Equipe equipe) throws SQLException
     {
-	PreparedStatement stm = conexao.prepareStatement("UPDATE Equipe SET nome = ?, especialidade = ?, email = ?, descricao = ?, qtdFuncionarios = ? where Equipe.idEquipe= ?");
+	PreparedStatement stm = conexao.prepareStatement("UPDATE Equipe SET nome = ?, especialidade = ?, email = ?, descricao = ?, qtd_funcionarios = ? where Equipe.id_equipe= ?");
 	stm.setString(1, equipe.getNome());
 	stm.setString(2, equipe.getEspecialidade());
 	stm.setString(3, equipe.getEmail());
@@ -162,11 +162,11 @@ public class EquipeDao implements AutoCloseable
 
     public void delete(int id) throws SQLException, NotFoundException
     {
-	PreparedStatement stm = conexao.prepareStatement("DELETE from Equipe where Equipe.idEquipe = ?");
+	PreparedStatement stm = conexao.prepareStatement("DELETE from Equipe where Equipe.id_equipe = ?");
 	stm.setInt(1, id);
 	int linha = stm.executeUpdate();
 	if (linha == 0)
-	    throw new NotFoundException("Equipe não encontrada para ser removida");
+	    throw new NotFoundException("\nEquipe não encontrada para ser removida");
     }
 
 }

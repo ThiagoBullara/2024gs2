@@ -24,7 +24,7 @@ public class MainMenu
 		try
 		{
 
-		    System.out.println("\n\n--------- Bem vindo ao SGPS / Sistema de Gerenciamento de Projéteis Sustentáveis ---------\n");
+		    System.out.println("\n\n--------- Bem vindo ao SGPS / Sistema de Gerenciamento de Projetos Sustentáveis ---------\n");
 		    System.out.println("\nEscolha uma opção:\n");
 		    System.out.println("1 - Equipe");
 		    System.out.println("2 - Gestor");

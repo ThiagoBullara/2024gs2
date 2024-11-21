@@ -29,7 +29,7 @@ public class ProjetoView
 	    do
 	    {
 		System.out.println("""
-		Escolha uma opção:
+		\nEscolha uma opção:\n
 		1 - Cadastrar
 		2 - Pesquisar por Código
 		3 - Listar
@@ -39,10 +39,11 @@ public class ProjetoView
 		""");
 		try
 		{
+			System.out.print("Opção: ");
 		    escolha = scanner.nextInt();
 		} catch (InputMismatchException e)
 		{
-		    System.out.println("Entrada inválida! Por favor, insira um número.");
+		    System.out.println("\nEntrada inválida! Por favor, insira um número.");
 		    scanner.next();
 		    continue;
 		}
@@ -54,13 +55,13 @@ public class ProjetoView
 		    case 3 -> search();
 		    case 4 -> update(scanner);
 		    case 5 -> delete(scanner);
-		    case 0 -> System.out.println("Voltando ao menu principal...");
-		    default -> System.out.println("Opção inválida! Tente novamente.");
+		    case 0 -> System.out.println("\nVoltando ao menu principal...");
+		    default -> System.out.println("\nOpção inválida! Tente novamente.");
 		}
 	    } while (escolha != 0);
 	} catch (SQLException e)
 	{
-	    System.err.println("Erro ao conectar ao banco de dados: " + e.getMessage());
+	    System.err.print("\nErro ao conectar ao banco de dados: \n" + e.getMessage() + "\n");
 	}
 
     }
@@ -68,37 +69,37 @@ public class ProjetoView
     private static void insert(Scanner scanner) throws SQLException, NotFoundException
     {
 	Projeto novoProjeto = new Projeto();
-	System.out.println("Digite o nome do projeto:");
+	System.out.print("\nDigite o nome do projeto: ");
 	novoProjeto.setNome(scanner.next() + scanner.nextLine());
-	System.out.println("Digite o tipo do projeto:");
+	System.out.print("\nDigite o tipo do projeto: ");
 	novoProjeto.setTipo(scanner.next() + scanner.nextLine());
-	System.out.println("Digite uma descrição para o projeto:");
+	System.out.print("\nDigite uma descrição para o projeto: ");
 	novoProjeto.setDescricao(scanner.next() + scanner.nextLine());
-	System.out.println("Digite o status do projeto:");
+	System.out.print("\nDigite o status do projeto: ");
 	novoProjeto.setStatus(scanner.next() + scanner.nextLine());
-	System.out.println("Digite a localização do projeto:");
+	System.out.print("\nDigite a localização do projeto: ");
 	novoProjeto.setLocalizacao(scanner.next() + scanner.nextLine());
-	System.out.println("Digite a duração do projeto (em dias):");
+	System.out.print("\nDigite a duração do projeto (em dias): ");
 	while (!scanner.hasNextInt())
 	{
-	    System.out.println("Entrada inválida. Digite um número inteiro.");
+	    System.out.print("\nEntrada inválida. Digite um número inteiro: ");
 	    scanner.next();
 	}
 	novoProjeto.setDuracao(scanner.nextInt());
 	scanner.nextLine();
 
-	System.out.println("Digite o orçamento do projeto:");
+	System.out.print("\nDigite o orçamento do projeto: ");
 	while (!scanner.hasNextDouble())
 	{
-	    System.out.println("Entrada inválida. Digite um número decimal.");
+	    System.out.print("\nEntrada inválida. Digite um número decimal: ");
 	    scanner.next();
 	}
 	novoProjeto.setOrcamento(scanner.nextDouble());
 	scanner.nextLine();
 
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-	novoProjeto.setDataInicio(lerData(scanner, formatter, "Digite a data de início do projeto (dd/MM/yyyy HH:mm):"));
-	novoProjeto.setDataTermino(lerData(scanner, formatter, "Digite a data de término do projeto (dd/MM/yyyy HH:mm):"));
+	novoProjeto.setDataInicio(lerData(scanner, formatter, "\nDigite a data de início do projeto (dd/MM/yyyy HH:mm): "));
+	novoProjeto.setDataTermino(lerData(scanner, formatter, "\nDigite a data de término do projeto (dd/MM/yyyy HH:mm): "));
 
 	try (Connection conexao = ConnectionFactory.getConnection();
 		EquipeDao equipeDao = new EquipeDao(conexao);
@@ -112,20 +113,20 @@ public class ProjetoView
 		List<Equipe> equipes = equipeDao.search();
 		if (equipes.isEmpty())
 		{
-		    System.out.println("Nenhuma equipe encontrada. Deseja criar uma nova equipe? (S/N)");
+		    System.out.println("\nNenhuma equipe encontrada. Deseja criar uma nova equipe? (S/N): ");
 		    String resposta = scanner.nextLine();
 		    if (resposta.equalsIgnoreCase("S"))
 		    {
 			Equipe novaEquipe = new Equipe();
-			System.out.println("Digite o nome da nova equipe:");
+			System.out.print("\nDigite o nome da nova equipe: ");
 			novaEquipe.setNome(scanner.next() + scanner.nextLine());
-			System.out.println("Digite a especialidade da equipe:");
+			System.out.print("\nDigite a especialidade da equipe: ");
 			novaEquipe.setEspecialidade(scanner.next() + scanner.nextLine());
-			System.out.println("Digite o email da equipe:");
+			System.out.print("\nDigite o email da equipe: ");
 			novaEquipe.setEmail(scanner.next() + scanner.nextLine());
-			System.out.println("Digite uma descrição para a equipe:");
+			System.out.print("\nDigite uma descrição para a equipe: ");
 			novaEquipe.setDescricao(scanner.next() + scanner.nextLine());
-			System.out.println("Digite a quantidade de funcionários na equipe:");
+			System.out.print("\nDigite a quantidade de funcionários na equipe: ");
 			novaEquipe.setQtdFuncionarios(scanner.nextInt());
 
 			int equipeId = equipeDao.insert(novaEquipe);
@@ -134,23 +135,23 @@ public class ProjetoView
 			equipeValida = true;
 		    } else if (resposta.equalsIgnoreCase("N"))
 		    {
-			System.out.println("Operação cancelada. Não é possível cadastrar um projeto sem uma equipe.");
+			System.out.println("\nOperação cancelada. Não é possível cadastrar um projeto sem uma equipe.");
 			return;
 		    } else
 		    {
-			System.out.println("Resposta inválida. Por favor, responda com 'S' ou 'N'.");
+			System.out.println("\nResposta inválida. Por favor, responda com 'S' ou 'N'.");
 		    }
 		} else
 		{
-		    System.out.println("Selecione a equipe para o projeto (ID):");
+		    System.out.println("\nSelecione a equipe para o projeto (ID)");
 		    for (Equipe equipe : equipes)
 		    {
-			System.out.println("ID: " + equipe.getIdEquipe() + " - Nome: " + equipe.getNome());
+			System.out.println("\nID: " + equipe.getIdEquipe() + " - Nome: " + equipe.getNome());
 		    }
-
+			System.out.print("Equipe: ");
 		    while (!scanner.hasNextInt())
 		    {
-			System.out.println("Entrada inválida. Digite um número inteiro.");
+			System.out.println("\nEntrada inválida. Digite um número inteiro.");
 			scanner.next();
 		    }
 		    int equipeId = scanner.nextInt();
@@ -167,7 +168,7 @@ public class ProjetoView
 			equipeValida = true;
 		    } else
 		    {
-			System.out.println("ID da equipe inválido. Tente novamente.");
+			System.out.println("\nID da equipe inválido. Tente novamente.");
 		    }
 		}
 	    }
@@ -180,18 +181,18 @@ public class ProjetoView
 		    List<Gestor> gestores = gestorDao.search();
 		    if (gestores.isEmpty())
 		    {
-			System.out.println("Nenhum gestor encontrado. Deseja criar um novo gestor? (S/N)");
+			System.out.print("\nNenhum gestor encontrado. Deseja criar um novo gestor? (S/N): ");
 			String resposta = scanner.next();
 			if (resposta.equalsIgnoreCase("S"))
 			{
 			    Gestor novoGestor = new Gestor();
-			    System.out.println("Digite o nome do gestor:");
+			    System.out.print("\nDigite o nome do gestor: ");
 			    novoGestor.setNome(scanner.next() + scanner.nextLine());
-			    System.out.println("Digite o email do gestor:");
+			    System.out.print("\nDigite o email do gestor: ");
 			    novoGestor.setEmail(scanner.next() + scanner.nextLine());
-			    System.out.println("Digite o telefone do gestor:");
+			    System.out.print("\nDigite o telefone do gestor: ");
 			    novoGestor.setTelefone(scanner.next() + scanner.nextLine());
-			    System.out.println("Digite uma descrição para o gestor:");
+			    System.out.print("\nDigite uma descrição para o gestor: ");
 			    novoGestor.setDescricao(scanner.next() + scanner.nextLine());
 
 			    int gestorId = gestorDao.insert(novoGestor);
@@ -200,19 +201,20 @@ public class ProjetoView
 			    gestorValido = true;
 			} else if (resposta.equalsIgnoreCase("N"))
 			{
-			    System.out.println("Operação cancelada. Não é possível cadastrar um projeto sem um gestor.");
+			    System.out.println("\nOperação cancelada. Não é possível cadastrar um projeto sem um gestor.");
 			    return;
 			} else
 			{
-			    System.out.println("Entrada inválida. Por favor, responda com 'S' para sim ou 'N' para não.");
+			    System.out.println("\nEntrada inválida. Por favor, responda com 'S' para sim ou 'N' para não.");
 			}
 		    } else
 		    {
-			System.out.println("Selecione o gestor para o projeto (ID):");
+			System.out.println("\nSelecione o gestor para o projeto (ID)");
 			for (Gestor gestor : gestores)
 			{
-			    System.out.println("ID: " + gestor.getIdGestor() + " - Nome: " + gestor.getNome());
+			    System.out.println("\nID: " + gestor.getIdGestor() + " - Nome: " + gestor.getNome());
 			}
+			System.out.print("Gestor: ");
 			int gestorID = scanner.nextInt();
 			Gestor gestorSelecionado = gestores.stream()
 				.filter(gestor -> gestor.getIdGestor() == gestorID)
@@ -225,26 +227,26 @@ public class ProjetoView
 			    gestorValido = true;
 			} else
 			{
-			    System.out.println("ID do gestor inválido. Tente novamente.");
+			    System.out.println("\nID do gestor inválido. Tente novamente.");
 			}
 		    }
 		} catch (InputMismatchException e)
 		{
-		    System.out.println("Entrada inválida. Por favor, insira um número.");
+		    System.out.println("\nEntrada inválida. Por favor, insira um número.");
 		    scanner.next();
 		} catch (SQLException e)
 		{
-		    System.err.println("Erro ao buscar gestores: " + e.getMessage());
+		    System.err.println("\nErro ao buscar gestores: \n" + e.getMessage() + "\n");
 		}
 	    }
 
 	    int idProjeto = projetoDao.insert(novoProjeto);
-	    System.out.println("Projeto cadastrado com sucesso!");
+	    System.out.println("\nProjeto cadastrado com sucesso!");
 	    Projeto projeto = projetoDao.select(idProjeto);
-	    System.out.println(projeto.getIdProjeto() + " - " + projeto.getNome());
+	    System.out.println("\nID: " + projeto.getIdProjeto() + " - " + projeto.getNome());
 	} catch (SQLException e)
 	{
-	    System.err.println("Erro ao cadastrar projeto: " + e.getMessage());
+	    System.err.println("\nErro ao cadastrar projeto: " + e.getMessage() + "\n");
 	}
     }
 

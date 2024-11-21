@@ -36,11 +36,11 @@ public class ProjetoDao implements AutoCloseable
 
     public int insert(Projeto projeto) throws SQLException
     {
-	String sql = "INSERT INTO Projeto (nome, tipo, descricao, status, localizacao, duracao, orcamento, dataInicio, dataTermino, Gestor_id, Equipe_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	String sql = "INSERT INTO Projeto (nome, tipo, descricao, status, localizacao, duracao, orcamento, dataInicio, dataTermino, Fk_id_gestor, Fk_id_equipe) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	try (PreparedStatement stm = conexao.prepareStatement(sql, new String[]
 	{
-	    "idProjeto"
+	    "id_projeto"
 	}))
 	{
 	    stm.setString(1, projeto.getNome());
@@ -63,7 +63,7 @@ public class ProjetoDao implements AutoCloseable
 		    return rs.getInt(1);
 		} else
 		{
-		    throw new SQLException("Erro ao obter ID gerado.");
+		    throw new SQLException("\nErro ao obter ID gerado.");
 		}
 	    }
 	}
@@ -85,7 +85,7 @@ public class ProjetoDao implements AutoCloseable
 	    }
 	} catch (SQLException e)
 	{
-	    System.out.println("Erro ao fechar a conexão: " + e.getMessage());
+	    System.out.print("\nErro ao fechar a conexão: \n" + e.getMessage() + "\n");
 	}
     }
 
@@ -93,7 +93,7 @@ public class ProjetoDao implements AutoCloseable
     {
 	String sql = """
                  SELECT 
-                     Projeto.idProjeto AS id,
+                     Projeto.id_projeto AS id,
                      Projeto.nome AS nome,
                      Projeto.tipo AS tipo,
                      Projeto.descricao AS descricao,
@@ -103,24 +103,24 @@ public class ProjetoDao implements AutoCloseable
                      Projeto.orcamento AS orcamento,
                      Projeto.dataInicio AS dataInicio,
                      Projeto.dataTermino AS dataTermino,
-                     Gestor.id AS 'gestor.id',
+                     Gestor.id_gestor AS 'gestor.id',
                      Gestor.nome AS 'gestor.nome',
                      Gestor.email AS 'gestor.email',
                      Gestor.telefone AS 'gestor.telefone',
                      Gestor.descricao AS 'gestor.descricao',
-                     Equipe.id AS 'equipe.id',
+                     Equipe.id_equipe AS 'equipe.id',
                      Equipe.especialidade AS 'equipe.especialidade',
                      Equipe.email AS 'equipe.email',
                      Equipe.descricao AS 'equipe.descricao',
-                     Equipe.qntFuncionarios AS 'equipe.qntFuncionarios'
+                     Equipe.qtd_funcionarios AS 'equipe.qtdFuncionarios'
                  FROM
                      Projeto
 			JOIN
-		    Gestor ON Projeto.Gestor_id = Gestor.idGestor
+		    Gestor ON Projeto.Fk_id_gestor = Gestor.id_gestor
 			JOIN
-		    Equipe ON Projeto.Equipe_id = Equipe.idEquipe
+		    Equipe ON Projeto.FK_id_equipe = Equipe.id_equipe
                  WHERE
-                     Projeto.idProjeto = ?""";
+                     Projeto.id_projeto = ?""";
 
 	try (PreparedStatement stm = conexao.prepareStatement(sql))
 	{
@@ -129,7 +129,7 @@ public class ProjetoDao implements AutoCloseable
 	    {
 		if (!result.next())
 		{
-		    throw new NotFoundException("Projeto não encontrado");
+		    throw new NotFoundException("\nProjeto não encontrado");
 		}
 		
 		Timestamp dataInicio = result.getTimestamp("dataInicio");
@@ -166,7 +166,7 @@ public class ProjetoDao implements AutoCloseable
     {
 	String sql = """
 		SELECT 
-		    Projeto.idProjeto AS id,
+		    Projeto.id_projeto AS id,
 		    Projeto.nome AS nome,
 		    Projeto.tipo AS tipo,
 		    Projeto.descricao AS descricao,
@@ -176,22 +176,22 @@ public class ProjetoDao implements AutoCloseable
 		    Projeto.orcamento AS orcamento,
 		    Projeto.dataInicio AS dataInicio,
 		    Projeto.dataTermino AS dataTermino,
-		    Gestor.id AS 'gestor.id',
+		    Gestor.id_gestor AS 'gestor.id',
 		    Gestor.nome AS 'gestor.nome',
 		    Gestor.email AS 'gestor.email',
 		    Gestor.telefone AS 'gestor.telefone',
 		    Gestor.descricao AS 'gestor.descricao',
-		    Equipe.id AS 'equipe.id',
+		    Equipe.id_equipe AS 'equipe.id',
 		    Equipe.especialidade AS 'equipe.especialidade',
 		    Equipe.email AS 'equipe.email',
 		    Equipe.descricao AS 'equipe.descricao',
-		    Equipe.qntFuncionarios AS 'equipe.qntFuncionarios'
+		    Equipe.qtd_funcionarios AS 'equipe.qtdFuncionarios'
 		FROM
 		    Projeto
 		       JOIN
-		   Gestor ON Projeto.Gestor_id = Gestor.idGestor
+		   Gestor ON Projeto.FK_id_gestor = Gestor.id_gestor
 		       JOIN
-		   Equipe ON Projeto.Equipe_id = Equipe.idEquipe""";
+		   Equipe ON Projeto.FK_id_projeto = Equipe.id_equipe""";
 
 	List<Projeto> lista = new ArrayList<>();
 
@@ -238,7 +238,7 @@ public class ProjetoDao implements AutoCloseable
 
     public void update(Projeto projeto) throws SQLException
     {
-	PreparedStatement stm = conexao.prepareStatement("UPDATE Projeto SET nome = ?, tipo = ?, descricao = ?, status = ?, localizacao = ?, duracao = ?, orcamento = ?, dataInicio = ?, dataTermino = ?, Gestor_id = ?, Equipe_id = ? where Projeto.idProjeto= ?");
+	PreparedStatement stm = conexao.prepareStatement("UPDATE Projeto SET nome = ?, tipo = ?, descricao = ?, status = ?, localizacao = ?, duracao = ?, orcamento = ?, dataInicio = ?, dataTermino = ?, FK_id_gestor = ?, FK_id_equipe = ? WHERE Projeto.id_projeto= ?");
 	stm.setString(1, projeto.getNome());
 	stm.setString(2, projeto.getTipo());
 	stm.setString(3, projeto.getDescricao());
@@ -256,11 +256,11 @@ public class ProjetoDao implements AutoCloseable
 
     public void delete(int id) throws SQLException, NotFoundException
     {
-	PreparedStatement stm = conexao.prepareStatement("DELETE from Projeto where Projeto.idProjeto = ?");
+	PreparedStatement stm = conexao.prepareStatement("DELETE from Projeto where Projeto.id_projeto = ?");
 	stm.setInt(1, id);
 	int linha = stm.executeUpdate();
 	if (linha == 0)
-	    throw new NotFoundException("Projeto não encontrado para ser removido");
+	    throw new NotFoundException("\nProjeto não encontrado para ser removido");
     }
 
 }

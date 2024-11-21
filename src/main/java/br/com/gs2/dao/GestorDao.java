@@ -36,7 +36,7 @@ public class GestorDao implements AutoCloseable
 
 	try (PreparedStatement stm = conexao.prepareStatement(sql, new String[]
 	{
-	    "idGestor"
+	    "id_gestor"
 	}))
 	{
 	    stm.setString(1, gestor.getNome());
@@ -52,7 +52,7 @@ public class GestorDao implements AutoCloseable
 		    return rs.getInt(1);
 		} else
 		{
-		    throw new SQLException("Erro ao obter ID gerado.");
+		    throw new SQLException("\nErro ao obter ID gerado.");
 		}
 	    }
 	}
@@ -74,7 +74,7 @@ public class GestorDao implements AutoCloseable
 	    }
 	} catch (SQLException e)
 	{
-	    System.out.println("Erro ao fechar a conexão: " + e.getMessage());
+	    System.out.println("\nErro ao fechar a conexão: " + e.getMessage());
 	}
     }
 
@@ -82,7 +82,7 @@ public class GestorDao implements AutoCloseable
     {
 	String sql = """
                  SELECT 
-                     Gestor.idGestor AS id,
+                     Gestor.id_gestor AS id,
                      Gestor.nome AS nome,
                      Gestor.email AS email,
                      Gestor.telefone AS telefone,
@@ -90,7 +90,7 @@ public class GestorDao implements AutoCloseable
                  FROM
                      Gestor
                  WHERE
-                     Gestor.idGestor = ?""";
+                     Gestor.id_gestor = ?""";
 
 	try (PreparedStatement stm = conexao.prepareStatement(sql))
 	{
@@ -99,7 +99,7 @@ public class GestorDao implements AutoCloseable
 	    {
 		if (!result.next())
 		{
-		    throw new NotFoundException("Gestor não encontrado");
+		    throw new NotFoundException("\nGestor não encontrado");
 		}
 		
 		return new Gestor()
@@ -116,7 +116,7 @@ public class GestorDao implements AutoCloseable
     {
 	String sql = """
 		SELECT 
-		    Gestor.idGestor AS id,
+		    Gestor.id_gestor AS id,
 		    Gestor.nome AS nome,
 		    Gestor.email AS email,
 		    Gestor.telefone AS telefone,
@@ -146,7 +146,7 @@ public class GestorDao implements AutoCloseable
 
     public void update(Gestor gestor) throws SQLException
     {
-	PreparedStatement stm = conexao.prepareStatement("UPDATE Gestor SET nome = ?, email = ?, telefone = ?, descricao = ? where Gestor.idGestor= ?");
+	PreparedStatement stm = conexao.prepareStatement("UPDATE Gestor SET nome = ?, email = ?, telefone = ?, descricao = ? where Gestor.id_gestor= ?");
 	stm.setString(1, gestor.getNome());
 	stm.setString(2, gestor.getEmail());
 	stm.setString(3, gestor.getTelefone());
@@ -157,11 +157,11 @@ public class GestorDao implements AutoCloseable
 
     public void delete(int id) throws SQLException, NotFoundException
     {
-	PreparedStatement stm = conexao.prepareStatement("DELETE from Gestor where Gestor.idGestor = ?");
+	PreparedStatement stm = conexao.prepareStatement("DELETE from Gestor where Gestor.id_gestor = ?");
 	stm.setInt(1, id);
 	int linha = stm.executeUpdate();
 	if (linha == 0)
-	    throw new NotFoundException("Gestor não encontrado para ser removido");
+	    throw new NotFoundException("\nGestor não encontrado para ser removido");
     }
 
 }

@@ -58,3 +58,11 @@ CREATE TABLE Relatorio (
   FK_id_projeto NUMBER NOT NULL,
   CONSTRAINT FK_id_projeto FOREIGN KEY (FK_id_projeto) REFERENCES Projeto (id_Projeto)
 );
+
+select * from  gestor;
+
+select * from  equipe;
+
+select * from  projeto;
+
+select * from  recurso;

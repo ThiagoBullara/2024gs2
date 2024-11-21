@@ -24,7 +24,7 @@ public class RecursoView
 	    do
 	    {
 		System.out.println("""
-		Escolha uma opção:
+		\nEscolha uma opção:\n
 		1 - Cadastrar
 		2 - Pesquisar por Código
 		3 - Listar
@@ -34,10 +34,11 @@ public class RecursoView
 		""");
 		try
 		{
+			System.out.print("Opção: ");
 		    escolha = scanner.nextInt();
 		} catch (InputMismatchException e)
 		{
-		    System.out.println("Entrada inválida! Por favor, insira um número.");
+		    System.out.println("\nEntrada inválida! Por favor, insira um número.");
 		    scanner.next();
 		    continue;
 		}
@@ -49,13 +50,13 @@ public class RecursoView
 		    case 3 -> search();
 		    case 4 -> update(scanner);
 		    case 5 -> delete(scanner);
-		    case 0 -> System.out.println("Voltando ao menu principal...");
-		    default -> System.out.println("Opção inválida! Tente novamente.");
+		    case 0 -> System.out.println("\nVoltando ao menu principal...");
+		    default -> System.out.println("\nOpção inválida! Tente novamente.");
 		}
 	    } while (escolha != 0);
 	} catch (SQLException e)
 	{
-	    System.err.println("Erro ao conectar ao banco de dados: " + e.getMessage());
+	    System.err.print("\nErro ao conectar ao banco de dados: \n" + e.getMessage() + "\n");
 	}
 
     }
