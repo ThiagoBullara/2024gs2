@@ -103,21 +103,13 @@ public class EquipeDao implements AutoCloseable
 		{
 		    throw new NotFoundException("Equipe não encontrada");
 		}
-
-		int equipeID = result.getInt("id");
-		String nome = result.getString("nome");
-		String especialidade = result.getString("especialidade");
-		String email = result.getString("email");
-		String descricao = result.getString("descricao");
-		int qtdFuncionarios = result.getInt("qtdFuncionarios");
-
 		return new Equipe()
-			.setIdEquipe(equipeID)
-			.setNome(nome)
-			.setEspecialidade(especialidade)
-			.setEmail(email)
-			.setDescricao(descricao)
-			.setQtdFuncionarios(qtdFuncionarios);
+			.setIdEquipe(result.getInt("id"))
+			.setNome(result.getString("nome"))
+			.setEspecialidade(result.getString("especialidade"))
+			.setEmail(result.getString("email"))
+			.setDescricao(result.getString("descricao"))
+			.setQtdFuncionarios(result.getInt("qtdFuncionarios"));
 	    }
 	}
     }
@@ -143,20 +135,13 @@ public class EquipeDao implements AutoCloseable
 
 	    while (result.next())
 	    {
-		int equipeID = result.getInt("id");
-		String nome = result.getString("nome");
-		String especialidade = result.getString("especialidade");
-		String email = result.getString("email");
-		String descricao = result.getString("descricao");
-		int qtdFuncionarios = result.getInt("qtdFuncionarios");
-
 		lista.add(new Equipe()
-			.setIdEquipe(equipeID)
-			.setNome(nome)
-			.setEspecialidade(especialidade)
-			.setEmail(email)
-			.setDescricao(descricao)
-			.setQtdFuncionarios(qtdFuncionarios));
+			.setIdEquipe(result.getInt("id"))
+			.setNome(result.getString("nome"))
+			.setEspecialidade(result.getString("especialidade"))
+			.setEmail(result.getString("email"))
+			.setDescricao(result.getString("descricao"))
+			.setQtdFuncionarios(result.getInt("qtdFuncionarios")));
 	    }
 	}
 

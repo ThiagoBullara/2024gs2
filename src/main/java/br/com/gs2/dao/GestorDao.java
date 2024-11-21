@@ -101,19 +101,13 @@ public class GestorDao implements AutoCloseable
 		{
 		    throw new NotFoundException("Gestor não encontrado");
 		}
-
-		int gestorID = result.getInt("id");
-		String nome = result.getString("nome");
-		String email = result.getString("email");
-		String telefone = result.getString("telefone");
-		String descricao = result.getString("descricao");
-
+		
 		return new Gestor()
-			.setIdGestor(gestorID)
-			.setNome(nome)
-			.setEmail(email)
-			.setTelefone(telefone)
-			.setDescricao(descricao);
+			.setIdGestor(result.getInt("id"))
+			.setNome(result.getString("nome"))
+			.setEmail(result.getString("email"))
+			.setTelefone(result.getString("telefone"))
+			.setDescricao(result.getString("descricao"));
 	    }
 	}
     }
@@ -138,18 +132,12 @@ public class GestorDao implements AutoCloseable
 
 	    while (result.next())
 	    {
-		int gestorID = result.getInt("id");
-		String nome = result.getString("nome");
-		String email = result.getString("email");
-		String telefone = result.getString("telefone");
-		String descricao = result.getString("descricao");
-
 		lista.add(new Gestor()
-			.setIdGestor(gestorID)
-			.setNome(nome)
-			.setEmail(email)
-			.setTelefone(telefone)
-			.setDescricao(descricao));
+			.setIdGestor(result.getInt("id"))
+			.setNome(result.getString("nome"))
+			.setEmail(result.getString("email"))
+			.setTelefone(result.getString("telefone"))
+			.setDescricao(result.getString("descricao")));
 	    }
 	}
 
