@@ -139,74 +139,41 @@ public class RecursoDao implements AutoCloseable
 		    throw new NotFoundException("Recurso não encontrado");
 		}
 		
-		int recursoID = result.getInt("id");
-		String tipo = result.getString("tipo");
-		int quantidade = result.getInt("quantidade");
-		double custoUnitario = result.getDouble("custoUnitario");
-		String fornecedor = result.getString("fornecedor");
-		
-		int projetoID = result.getInt("projeto.id");
-		String projetoNome = result.getString("projeto.nome");
-		String projetoTipo = result.getString("projeto.tipo");
-		String projetoDescricao = result.getString("projeto.descricao");
-		String projetoStatus = result.getString("projeto.status");
-		String projetoLocalizacao = result.getString("projeto.localizacao");
-		int projetoDuracao = result.getInt("projeto.duracao");
-		double projetoOrcamento = result.getDouble("projeto.orcamento");
-
 		Timestamp dataTimestamp = result.getTimestamp("projeto.dataInicio");
 		LocalDateTime projetoDataInicio = dataTimestamp != null ? dataTimestamp.toLocalDateTime() : null;
 
 		Timestamp dataTimestamp2 = result.getTimestamp("projeto.dataTermino");
-		LocalDateTime projetoDataTermino = dataTimestamp != null ? dataTimestamp.toLocalDateTime() : null;
-
-		int gestorID = result.getInt("gestor.id");
-		String gestorNome = result.getString("gestor.nome");
-		String gestorEmail = result.getString("gestor.emial");
-		String gestorTelefone = result.getString("gestor.telefone");
-		String gestorDescricao = result.getString("gestor.descricao");
-
-		int equipeID = result.getInt("equipe.id");
-		String equipeEspecialidade = result.getString("equipe.especialidade");
-		String equipeEmail = result.getString("equipe.email");
-		String equipeDescricao = result.getString("equipe.descricao");
-		int equipeQtdFuncionarios = result.getInt("equipe.qtdFuncionarios");
-
-		Gestor gestor = new Gestor()
-			.setIdGestor(gestorID)
-			.setNome(gestorNome)
-			.setEmail(gestorEmail)
-			.setTelefone(gestorTelefone)
-			.setDescricao(gestorDescricao);
-
-		Equipe equipe = new Equipe()
-			.setIdEquipe(equipeID)
-			.setEspecialidade(equipeEspecialidade)
-			.setEmail(equipeEmail)
-			.setDescricao(equipeDescricao)
-			.setQtdFuncionarios(equipeQtdFuncionarios);
-
-		Projeto projeto = new Projeto()
-			.setIdProjeto(projetoID)
-			.setNome(projetoNome)
-			.setTipo(projetoTipo)
-			.setDescricao(projetoDescricao)
-			.setStatus(projetoStatus)
-			.setLocalizacao(projetoLocalizacao)
-			.setDuracao(projetoDuracao)
-			.setOrcamento(projetoOrcamento)
-			.setDataInicio(projetoDataInicio)
-			.setDataTermino(projetoDataTermino)
-			.setGestor(gestor)
-			.setEquipe(equipe);
+		LocalDateTime projetoDataTermino = dataTimestamp2 != null ? dataTimestamp2.toLocalDateTime() : null;
 		
 		return new Recurso()
-			.setIdRecurso(recursoID)
-			.setTipo(tipo)
-			.setQuantidade(quantidade)
-			.setCustoUnitario(custoUnitario)
-			.setFornecedor(fornecedor)
-			.setProjeto(projeto);
+			.setIdRecurso(result.getInt("id"))
+			.setTipo(result.getString("tipo"))
+			.setQuantidade(result.getInt("quantidade"))
+			.setCustoUnitario(result.getDouble("custoUnitario"))
+			.setFornecedor(result.getString("fornecedor"))
+			.setProjeto(new Projeto()
+			    .setIdProjeto(result.getInt("id"))
+			    .setNome(result.getString("nome"))
+			    .setTipo(result.getString("tipo"))
+			    .setDescricao(result.getString("descricao"))
+			    .setStatus(result.getString("status"))
+			    .setLocalizacao(result.getString("localizacao"))
+			    .setDuracao(result.getInt("duracao"))
+			    .setOrcamento(result.getDouble("orcamento"))
+			    .setDataInicio(projetoDataInicio)
+			    .setDataTermino(projetoDataTermino)
+			    .setGestor(new Gestor()
+				.setIdGestor(result.getInt("gestor.id"))
+				.setNome(result.getString("gestor.nome"))
+				.setEmail(result.getString("gestor.email"))
+				.setTelefone(result.getString("gestor.telefone"))
+				.setDescricao(result.getString("gestor.descricao")))
+			    .setEquipe(new Equipe()
+				.setIdEquipe(result.getInt("equipe.id"))
+				.setEspecialidade(result.getString("equipe.especialidade"))
+				.setEmail(result.getString("equipe.email"))
+				.setDescricao(result.getString("equipe.descricao"))
+				.setQtdFuncionarios(result.getInt("equipe.qtdFuncionarios"))));
 	    }
 	}
     }
@@ -262,74 +229,41 @@ public class RecursoDao implements AutoCloseable
 
 	    while (result.next())
 	    {
-		int recursoID = result.getInt("id");
-		String tipo = result.getString("tipo");
-		int quantidade = result.getInt("quantidade");
-		double custoUnitario = result.getDouble("custoUnitario");
-		String fornecedor = result.getString("fornecedor");
-		
-		int projetoID = result.getInt("projeto.id");
-		String projetoNome = result.getString("projeto.nome");
-		String projetoTipo = result.getString("projeto.tipo");
-		String projetoDescricao = result.getString("projeto.descricao");
-		String projetoStatus = result.getString("projeto.status");
-		String projetoLocalizacao = result.getString("projeto.localizacao");
-		int projetoDuracao = result.getInt("projeto.duracao");
-		double projetoOrcamento = result.getDouble("projeto.orcamento");
-
 		Timestamp dataTimestamp = result.getTimestamp("projeto.dataInicio");
 		LocalDateTime projetoDataInicio = dataTimestamp != null ? dataTimestamp.toLocalDateTime() : null;
 
 		Timestamp dataTimestamp2 = result.getTimestamp("projeto.dataTermino");
-		LocalDateTime projetoDataTermino = dataTimestamp != null ? dataTimestamp.toLocalDateTime() : null;
-
-		int gestorID = result.getInt("gestor.id");
-		String gestorNome = result.getString("gestor.nome");
-		String gestorEmail = result.getString("gestor.emial");
-		String gestorTelefone = result.getString("gestor.telefone");
-		String gestorDescricao = result.getString("gestor.descricao");
-
-		int equipeID = result.getInt("equipe.id");
-		String equipeEspecialidade = result.getString("equipe.especialidade");
-		String equipeEmail = result.getString("equipe.email");
-		String equipeDescricao = result.getString("equipe.descricao");
-		int equipeQtdFuncionarios = result.getInt("equipe.qtdFuncionarios");
-
-		Gestor gestor = new Gestor()
-			.setIdGestor(gestorID)
-			.setNome(gestorNome)
-			.setEmail(gestorEmail)
-			.setTelefone(gestorTelefone)
-			.setDescricao(gestorDescricao);
-
-		Equipe equipe = new Equipe()
-			.setIdEquipe(equipeID)
-			.setEspecialidade(equipeEspecialidade)
-			.setEmail(equipeEmail)
-			.setDescricao(equipeDescricao)
-			.setQtdFuncionarios(equipeQtdFuncionarios);
-
-		Projeto projeto = new Projeto()
-			.setIdProjeto(projetoID)
-			.setNome(projetoNome)
-			.setTipo(projetoTipo)
-			.setDescricao(projetoDescricao)
-			.setStatus(projetoStatus)
-			.setLocalizacao(projetoLocalizacao)
-			.setDuracao(projetoDuracao)
-			.setOrcamento(projetoOrcamento)
-			.setDataInicio(projetoDataInicio)
-			.setDataTermino(projetoDataTermino)
-			.setGestor(gestor)
-			.setEquipe(equipe);
+		LocalDateTime projetoDataTermino = dataTimestamp2 != null ? dataTimestamp2.toLocalDateTime() : null;
 
 		lista.add(new Recurso()
-			.setIdRecurso(recursoID)
-			.setTipo(tipo)
-			.setQuantidade(quantidade)
-			.setCustoUnitario(custoUnitario)
-			.setFornecedor(fornecedor)
-			.setProjeto(projeto));
+			.setIdRecurso(result.getInt("id"))
+			.setTipo(result.getString("tipo"))
+			.setQuantidade(result.getInt("quantidade"))
+			.setCustoUnitario(result.getDouble("custoUnitario"))
+			.setFornecedor(result.getString("fornecedor"))
+			.setProjeto(new Projeto()
+			    .setIdProjeto(result.getInt("id"))
+			    .setNome(result.getString("nome"))
+			    .setTipo(result.getString("tipo"))
+			    .setDescricao(result.getString("descricao"))
+			    .setStatus(result.getString("status"))
+			    .setLocalizacao(result.getString("localizacao"))
+			    .setDuracao(result.getInt("duracao"))
+			    .setOrcamento(result.getDouble("orcamento"))
+			    .setDataInicio(projetoDataInicio)
+			    .setDataTermino(projetoDataTermino)
+			    .setGestor(new Gestor()
+				.setIdGestor(result.getInt("gestor.id"))
+				.setNome(result.getString("gestor.nome"))
+				.setEmail(result.getString("gestor.email"))
+				.setTelefone(result.getString("gestor.telefone"))
+				.setDescricao(result.getString("gestor.descricao")))
+			    .setEquipe(new Equipe()
+				.setIdEquipe(result.getInt("equipe.id"))
+				.setEspecialidade(result.getString("equipe.especialidade"))
+				.setEmail(result.getString("equipe.email"))
+				.setDescricao(result.getString("equipe.descricao"))
+				.setQtdFuncionarios(result.getInt("equipe.qtdFuncionarios")))));
 	    }
 	}
 
