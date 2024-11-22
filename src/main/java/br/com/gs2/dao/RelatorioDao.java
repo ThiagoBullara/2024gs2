@@ -57,17 +57,17 @@ public class RelatorioDao implements AutoCloseable
 	    }
 	} catch (SQLException e)
 	{
-	    System.out.println("Erro ao fechar a conexão: " + e.getMessage());
+	    System.out.println("\nErro ao fechar a conexão: " + e.getMessage());
 	}
     }
 
     public int insert(Relatorio relatorio) throws SQLException
     {
-	String sql = "INSERT INTO Relatorio (descricao, autor, dataEmissao, tipoRelatorio, Projeto_id, orcamentoTotal, despesas, valorGerado, emissaoEvitada, recursosEconomizados, qtdEnergiaGerada, eficiencia, validade) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	String sql = "INSERT INTO Relatorio (descricao, autor, dataEmissao, tipoRelatorio, FK_id_projeto, orcamento_total, despesas, valorGerado, emissao_evitada, recursos_economizados, qtd_energia_gerada, eficiencia, validade) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	try (PreparedStatement stm = conexao.prepareStatement(sql, new String[]
 	{
-	    "idRelatorio"
+	    "id_relatorio"
 	}))
 	{
 	    stm.setString(1, relatorio.getDescricao());
@@ -116,48 +116,49 @@ public class RelatorioDao implements AutoCloseable
     {
 	String sql = """
             SELECT 
-		Relatorio.idRelatorio AS id,
+		Relatorio.id_relatorio AS id,
 		Relatorio.descricao AS descricao,
 		Relatorio.autor AS autor,
 		Relatorio.dataEmissao AS dataEmissao,
 		Relatorio.tipoRelatorio AS tipoRelatorio,
-		Relatorio.orcamentoTotal AS orcamentoTotal,
+		Relatorio.orcamento_total AS orcamentoTotal,
 		Relatorio.despesas AS despesas,
 		Relatorio.valorGerado AS valorGerado,
-		Relatorio.emissaoEvitada AS emissaoEvitada,
-		Relatorio.recursosEconomizados AS recursosEconomizados,
-		Relatorio.qtdEnergiaGerada AS qtdEnergiaGerada,
+		Relatorio.emissao_evitada AS emissaoEvitada,
+		Relatorio.recursos_economizados AS recursosEconomizados,
+		Relatorio.qtd_energia_gerada AS qtdEnergiaGerada,
 		Relatorio.eficiencia AS eficiencia,
 		Relatorio.validade AS validade,
-		Projeto.id AS 'projeto.id',
-		Projeto.nome AS 'projeto.nome',
-		Projeto.tipo AS 'projeto.tipo',
-		Projeto.descricao AS 'projeto.descricao',
-		Projeto.status AS 'projeto.status',
-		Projeto.localizacao AS 'projeto.localizacao',
-		Projeto.duracao AS 'projeto.duracao',
-		Projeto.orcamento AS 'projeto.orcamento',
-		Projeto.dataInicio AS 'projeto.dataInicio',
-		Projeto.dataTermino AS 'projeto.dataTermino',
-		Gestor.id AS 'gestor.id',
-		Gestor.nome AS 'gestor.nome',
-		Gestor.email AS 'gestor.email',
-		Gestor.telefone AS 'gestor.telefone',
-		Gestor.descricao AS 'gestor.descricao',
-		Equipe.id AS 'equipe.id',
-		Equipe.especialidade AS 'equipe.especialidade',
-		Equipe.email AS 'equipe.email',
-		Equipe.descricao AS 'equipe.descricao',
-		Equipe.qntFuncionarios AS 'equipe.qntFuncionarios'
+		Projeto.id_projeto AS "projeto.id",
+		Projeto.nome AS "projeto.nome",
+		Projeto.tipo AS "projeto.tipo",
+		Projeto.descricao AS "projeto.descricao",
+		Projeto.status AS "projeto.status",
+		Projeto.localizacao AS "projeto.localizacao",
+		Projeto.duracao AS "projeto.duracao",
+		Projeto.orcamento AS "projeto.orcamento",
+		Projeto.dataInicio AS "projeto.dataInicio",
+		Projeto.dataTermino AS "projeto.dataTermino",
+		Gestor.id_gestor AS "gestor.id",
+		Gestor.nome AS "gestor.nome",
+		Gestor.email AS "gestor.email",
+		Gestor.telefone AS "gestor.telefone",
+		Gestor.descricao AS "gestor.descricao",
+		Equipe.id_equipe AS "equipe.id",
+		Equipe.nome AS "equipe.nome",
+		Equipe.especialidade AS "equipe.especialidade",
+		Equipe.email AS "equipe.email",
+		Equipe.descricao AS "equipe.descricao",
+		Equipe.qtd_funcionarios AS "equipe.qtdFuncionarios"
 	    FROM
               Relatorio
 		    JOIN
-              Projeto ON Relatorio.Projeto_id = Projeto.idProjeto
+              Projeto ON Relatorio.FK_id_projeto = Projeto.id_projeto
 		    JOIN
-	      Gestor ON Projeto.Gestor_id = Gestor.idGestor
+	      Gestor ON Projeto.FK_id_gestor = Gestor.id_gestor
 		    JOIN
-	      Equipe ON Projeto.Equipe_id = Equipe.idEquipe
-            WHERE idRelatorio = ?
+	      Equipe ON Projeto.FK_id_equipe = Equipe.id_equipe
+            WHERE id_relatorio = ?
         """;
 
 	try (PreparedStatement stmt = conexao.prepareStatement(sql))
@@ -227,6 +228,7 @@ public class RelatorioDao implements AutoCloseable
 				    .setDescricao(result.getString("gestor.descricao")))
 			    .setEquipe(new Equipe()
 				    .setIdEquipe(result.getInt("equipe.id"))
+					.setNome(result.getString("equipe.nome"))
 				    .setEspecialidade(result.getString("equipe.especialidade"))
 				    .setEmail(result.getString("equipe.email"))
 				    .setDescricao(result.getString("equipe.descricao"))
@@ -247,36 +249,48 @@ public class RelatorioDao implements AutoCloseable
     {
 	String sql = """
         SELECT 
-            Relatorio.idRelatorio AS id,
+            Relatorio.id_relatorio AS id,
             Relatorio.descricao AS descricao,
             Relatorio.autor AS autor,
             Relatorio.dataEmissao AS dataEmissao,
             Relatorio.tipoRelatorio AS tipoRelatorio,
-            Relatorio.orcamentoTotal AS orcamentoTotal,
+            Relatorio.orcamento_total AS orcamentoTotal,
             Relatorio.despesas AS despesas,
             Relatorio.valorGerado AS valorGerado,
-            Relatorio.emissaoEvitada AS emissaoEvitada,
-            Relatorio.recursosEconomizados AS recursosEconomizados,
-            Relatorio.qtdEnergiaGerada AS qtdEnergiaGerada,
+            Relatorio.emissao_evitada AS emissaoEvitada,
+            Relatorio.recursos_economizados AS recursosEconomizados,
+            Relatorio.qtd_energia_gerada AS qtdEnergiaGerada,
             Relatorio.eficiencia AS eficiencia,
             Relatorio.validade AS validade,
-            Projeto.id AS 'projeto.id',
-            Projeto.nome AS 'projeto.nome',
-            Projeto.tipo AS 'projeto.tipo',
-            Projeto.descricao AS 'projeto.descricao',
-            Projeto.status AS 'projeto.status',
-            Projeto.localizacao AS 'projeto.localizacao',
-            Projeto.duracao AS 'projeto.duracao',
-            Projeto.orcamento AS 'projeto.orcamento',
-            Projeto.dataInicio AS 'projeto.dataInicio',
+            Projeto.id_projeto AS "projeto.id",
+            Projeto.nome AS "projeto.nome",
+            Projeto.tipo AS "projeto.tipo",
+            Projeto.descricao AS "projeto.descricao",
+            Projeto.status AS "projeto.status",
+            Projeto.localizacao AS "projeto.localizacao",
+            Projeto.duracao AS "projeto.duracao",
+            Projeto.orcamento AS "projeto.orcamento",
+            Projeto.dataInicio AS "projeto.dataInicio",
+			Projeto.dataTermino AS "projeto.dataTermino",
+		    Gestor.id_gestor AS "gestor.id",
+		    Gestor.nome AS "gestor.nome",
+		    Gestor.email AS "gestor.email",
+		    Gestor.telefone AS "gestor.telefone",
+		    Gestor.descricao AS "gestor.descricao",
+		    Equipe.id_equipe AS "equipe.id",
+			Equipe.nome AS "equipe.nome",
+		    Equipe.especialidade AS "equipe.especialidade",
+		    Equipe.email AS "equipe.email",
+		    Equipe.descricao AS "equipe.descricao",
+		    Equipe.qtd_funcionarios AS "equipe.qtdFuncionarios"
         FROM
 	    Relatorio
 	      JOIN
-	    Projeto ON Relatorio.Projeto_id = Projeto.idProjeto
+	    Projeto ON Relatorio.FK_id_projeto = Projeto.id_projeto
 	      JOIN
-	Gestor ON Projeto.Gestor_id = Gestor.idGestor
+	Gestor ON Projeto.FK_id_gestor = Gestor.id_gestor
 	      JOIN
-	Equipe ON Projeto.Equipe_id = Equipe.idEquipe""";
+	Equipe ON Projeto.FK_id_equipe = Equipe.id_equipe""";
 
 	List<Relatorio> relatorios = new ArrayList<>();
 
@@ -363,36 +377,48 @@ public class RelatorioDao implements AutoCloseable
     {
 	String sql = """
         SELECT 
-            Relatorio.idRelatorio AS id,
+            Relatorio.id_relatorio AS id,
             Relatorio.descricao AS descricao,
             Relatorio.autor AS autor,
             Relatorio.dataEmissao AS dataEmissao,
             Relatorio.tipoRelatorio AS tipoRelatorio,
-            Relatorio.orcamentoTotal AS orcamentoTotal,
+            Relatorio.orcamento_total AS orcamentoTotal,
             Relatorio.despesas AS despesas,
             Relatorio.valorGerado AS valorGerado,
-            Relatorio.emissaoEvitada AS emissaoEvitada,
-            Relatorio.recursosEconomizados AS recursosEconomizados,
-            Relatorio.qtdEnergiaGerada AS qtdEnergiaGerada,
+            Relatorio.emissao_evitada AS emissaoEvitada,
+            Relatorio.recursos_economizados AS recursosEconomizados,
+            Relatorio.qtd_energia_gerada AS qtdEnergiaGerada,
             Relatorio.eficiencia AS eficiencia,
             Relatorio.validade AS validade,
-            Projeto.id AS 'projeto.id',
-            Projeto.nome AS 'projeto.nome',
-            Projeto.tipo AS 'projeto.tipo',
-            Projeto.descricao AS 'projeto.descricao',
-            Projeto.status AS 'projeto.status',
-            Projeto.localizacao AS 'projeto.localizacao',
-            Projeto.duracao AS 'projeto.duracao',
-            Projeto.orcamento AS 'projeto.orcamento',
-            Projeto.dataInicio AS 'projeto.dataInicio'
+            Projeto.id_projeto AS "projeto.id",
+            Projeto.nome AS "projeto.nome",
+            Projeto.tipo AS "projeto.tipo",
+            Projeto.descricao AS "projeto.descricao",
+            Projeto.status AS "projeto.status",
+            Projeto.localizacao AS "projeto.localizacao",
+            Projeto.duracao AS "projeto.duracao",
+            Projeto.orcamento AS "projeto.orcamento",
+            Projeto.dataInicio AS "projeto.dataInicio",
+			Projeto.dataTermino AS "projeto.dataTermino",
+		    Gestor.id_gestor AS "gestor.id",
+		    Gestor.nome AS "gestor.nome",
+		    Gestor.email AS "gestor.email",
+		    Gestor.telefone AS "gestor.telefone",
+		    Gestor.descricao AS "gestor.descricao",
+		    Equipe.id_equipe AS "equipe.id",
+			Equipe.nome AS "equipe.nome",
+		    Equipe.especialidade AS "equipe.especialidade",
+		    Equipe.email AS "equipe.email",
+		    Equipe.descricao AS "equipe.descricao",
+		    Equipe.qtd_funcionarios AS "equipe.qtdFuncionarios"
         FROM
             Relatorio
         JOIN
-            Projeto ON Relatorio.Projeto_id = Projeto.idProjeto
+            Projeto ON Relatorio.FK_id_projeto = Projeto.id_projeto
         JOIN
-            Gestor ON Projeto.Gestor_id = Gestor.idGestor
+            Gestor ON Projeto.FK_id_gestor = Gestor.id_gestor
         JOIN
-            Equipe ON Projeto.Equipe_id = Equipe.idEquipe
+            Equipe ON Projeto.FK_id_equipe = Equipe.id_equipe
         WHERE 
             Relatorio.tipoRelatorio = ?
         """;
@@ -491,16 +517,16 @@ public class RelatorioDao implements AutoCloseable
             autor = ?,
             dataEmissao = ?,
             tipoRelatorio = ?,
-	    Projeto_id = ?,
-            orcamentoTotal = ?,
+	    	FK_id_projeto = ?,
+            orcamento_total = ?,
             despesas = ?,
             valorGerado = ?,
-            emissaoEvitada = ?,
-            recursosEconomizados = ?,
-            qtdEnergiaGerada = ?,
+            emissao_evitada = ?,
+            recursos_economizados = ?,
+            qtd_energia_gerada = ?,
             eficiencia = ?,
             validade = ?
-        WHERE idRelatorio = ?
+        WHERE Relatorio.id_relatorio = ?
     """;
 
 	try (PreparedStatement stmt = conexao.prepareStatement(sql))
@@ -510,7 +536,7 @@ public class RelatorioDao implements AutoCloseable
 	    stmt.setTimestamp(3, relatorio.getDataEmissao() != null
 		    ? Timestamp.valueOf(relatorio.getDataEmissao()) : null);
 	    stmt.setString(4, relatorio.getTipoRelatorio().name());
-	    stmt.setString(5, relatorio.getTipoRelatorio().name());
+	    stmt.setInt(5, relatorio.getProjeto().getIdProjeto());
 
 	    if (relatorio instanceof Financeiro financeiro)
 	    {
@@ -538,27 +564,23 @@ public class RelatorioDao implements AutoCloseable
 		stmt.setNull(7, java.sql.Types.DOUBLE);
 		stmt.setNull(8, java.sql.Types.DOUBLE);
 		stmt.setNull(9, java.sql.Types.DOUBLE);
-		stmt.setNull(9, java.sql.Types.DOUBLE);
+		stmt.setNull(10, java.sql.Types.DOUBLE);
 		stmt.setDouble(11, tecnologico.getQtdEnergiaGerada());
 		stmt.setDouble(12, tecnologico.getEficiencia());
 		stmt.setTimestamp(13, tecnologico.getValidade() != null
 			? Timestamp.valueOf(tecnologico.getValidade()) : null);
 	    }
 
-	    stmt.setInt(13, relatorio.getIdRelatorio());
+	    stmt.setInt(14, relatorio.getIdRelatorio());
 
-	    int rowsUpdated = stmt.executeUpdate();
+	    stmt.executeUpdate();
 
-	    if (rowsUpdated == 0)
-	    {
-		throw new NotFoundException("Relatório com ID " + relatorio.getIdRelatorio() + " não encontrado.");
-	    }
 	}
     }
 
     public void delete(int id) throws SQLException, NotFoundException
     {
-	String sql = "DELETE FROM Relatorio WHERE idRelatorio = ?";
+	String sql = "DELETE FROM Relatorio WHERE id_relatorio = ?";
 
 	try (PreparedStatement stmt = conexao.prepareStatement(sql))
 	{
@@ -566,7 +588,7 @@ public class RelatorioDao implements AutoCloseable
 	    int linha = stmt.executeUpdate();
 	    if (linha == 0)
 	    {
-		throw new NotFoundException("Relatório com ID " + id + " não encontrado.");
+		throw new NotFoundException("\nRelatório com ID " + id + " não encontrado.");
 	    }
 	}
     }

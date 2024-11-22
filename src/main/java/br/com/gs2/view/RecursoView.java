@@ -68,7 +68,6 @@ public class RecursoView
 	System.out.print("\nDigite o tipo do recurso: ");
 	novoRecurso.setTipo(scanner.next() + scanner.nextLine());
 	System.out.print("\nDigite a quantidade do recurso: ");
-	novoRecurso.setQuantidade(scanner.nextInt());
 	while (!scanner.hasNextInt())
 	{
 	    System.out.print("\nEntrada inválida. Digite um número inteiro: ");
@@ -84,7 +83,7 @@ public class RecursoView
 	}
 	novoRecurso.setCustoUnitario(scanner.nextInt());
 	scanner.nextLine();
-	System.out.println("Digite o fornecedor do recurso:");
+	System.out.print("\nDigite o fornecedor do recurso: ");
 	novoRecurso.setFornecedor(scanner.next() + scanner.nextLine());
 
 	try (Connection conexao = ConnectionFactory.getConnection();
@@ -95,14 +94,14 @@ public class RecursoView
 
 	    if (projetos.isEmpty())
 	    {
-		System.out.println("Nenhum projeto encontrado. Operação de cadastro de recurso cancelada.");
+		System.out.println("\nNenhum projeto encontrado. Operação de cadastro de recurso cancelada.");
 		return;
 	    }
 
-	    System.out.println("Selecione o projeto para o recurso (ID):");
+	    System.out.print("\nSelecione o projeto para o recurso (ID): ");
 	    for (Projeto projeto : projetos)
 	    {
-		System.out.println("ID: " + projeto.getIdProjeto() + " - Nome: " + projeto.getNome());
+		System.out.println("\nID: " + projeto.getIdProjeto() + " - Nome: " + projeto.getNome());
 	    }
 
 	    Projeto projetoSelecionado = null;
@@ -111,7 +110,7 @@ public class RecursoView
 	    {
 		while (!scanner.hasNextInt())
 		{
-		    System.out.println("Entrada inválida. Por favor, digite um número inteiro correspondente ao ID do projeto.");
+		    System.out.println("\nEntrada inválida. Por favor, digite um número inteiro correspondente ao ID do projeto.");
 		    scanner.next();
 		}
 
@@ -125,27 +124,27 @@ public class RecursoView
 
 		if (projetoSelecionado == null)
 		{
-		    System.out.println("ID do projeto inválido. Tente novamente.");
+		    System.out.println("\nID do projeto inválido. Tente novamente.");
 		}
 	    }
 
 	    novoRecurso.setProjeto(projetoSelecionado);
 
 	    int idRecurso = recursoDao.insert(novoRecurso);
-	    System.out.println("Recurso cadastrado com sucesso!");
+	    System.out.println("\nRecurso cadastrado com sucesso!");
 
 	    Recurso recursoCadastrado = recursoDao.select(idRecurso);
-	    System.out.println("ID: " + recursoCadastrado.getIdRecurso() + " - Tipo: " + recursoCadastrado.getTipo());
+	    System.out.println("\nID: " + recursoCadastrado.getIdRecurso() + " - Tipo: " + recursoCadastrado.getTipo());
 
 	} catch (SQLException e)
 	{
-	    System.err.println("Erro ao cadastrar recurso: " + e.getMessage());
+	    System.err.println("\nErro ao cadastrar recurso: \n" + e.getMessage() + "\n");
 	}
     }
 
     private static void select(Scanner scanner)
     {
-	System.out.println("Digite o código do recurso:");
+	System.out.print("\nDigite o código do recurso: ");
 	int id = scanner.nextInt();
 
 	try (Connection conexao = ConnectionFactory.getConnection();
@@ -154,21 +153,23 @@ public class RecursoView
 
 	    Recurso recurso = recursoDao.select(id);
 
-	    System.out.println("Recurso encontrado:");
-	    System.out.println("ID: " + recurso.getIdRecurso());
+		System.out.println("\n-----------------------------------------------------------------");
+	    System.out.println("\nRecurso encontrado:");
+	    System.out.println("\nID: " + recurso.getIdRecurso());
 	    System.out.println("Tipo: " + recurso.getTipo());
 	    System.out.println("Quantidade: " + recurso.getQuantidade());
 	    System.out.println("Custo Unitário: " + recurso.getCustoUnitario());
 	    System.out.println("Fornecedor: " + recurso.getFornecedor());
 
 	    Projeto projeto = recurso.getProjeto();
-	    System.out.println("Projeto associado:");
-	    System.out.println("  ID: " + projeto.getIdProjeto());
-	    System.out.println("  Nome: " + projeto.getNome());
+	    System.out.println("\nProjeto associado:");
+	    System.out.println("\nID: " + projeto.getIdProjeto());
+	    System.out.println("Nome: " + projeto.getNome());
+		System.out.println("\n-----------------------------------------------------------------");
 
 	} catch (SQLException | NotFoundException e)
 	{
-	    System.err.println("Erro ao pesquisar recurso: " + e.getMessage());
+	    System.err.println("\nErro ao pesquisar recurso: \n" + e.getMessage() + "\n");
 	}
     }
 
@@ -182,35 +183,36 @@ public class RecursoView
 
 	    if (recursos.isEmpty())
 	    {
-		System.out.println("Nenhum recurso encontrado.");
+		System.out.println("\nNenhum recurso encontrado.");
 		return;
 	    }
 
-	    System.out.println("Lista de recursos:");
+	    System.out.println("\nLista de recursos:");
 	    for (Recurso recurso : recursos)
 	    {
-		System.out.println("Recurso encontrado:");
-		System.out.println("ID: " + recurso.getIdRecurso());
+		System.out.println("\n-----------------------------------------------------------------");
+		System.out.println("\nID: " + recurso.getIdRecurso());
 		System.out.println("Tipo: " + recurso.getTipo());
 		System.out.println("Quantidade: " + recurso.getQuantidade());
 		System.out.println("Custo Unitário: " + recurso.getCustoUnitario());
 		System.out.println("Fornecedor: " + recurso.getFornecedor());
 
 		Projeto projeto = recurso.getProjeto();
-		System.out.println("Projeto associado:");
-		System.out.println("  ID: " + projeto.getIdProjeto());
-		System.out.println("  Nome: " + projeto.getNome());
+		System.out.println("\nProjeto associado:");
+		System.out.println("ID: " + projeto.getIdProjeto());
+		System.out.println("Nome: " + projeto.getNome());
 	    }
+		System.out.println("\n-----------------------------------------------------------------");
 
 	} catch (SQLException e)
 	{
-	    System.err.println("Erro ao listar recursos: " + e.getMessage());
+	    System.err.println("\nErro ao listar recursos: \n" + e.getMessage() + "\n");
 	}
     }
 
     private static void update(Scanner scanner) throws SQLException, NotFoundException
     {
-	System.out.println("Digite o código do recurso que deseja atualizar:");
+	System.out.print("\nDigite o código do recurso que deseja atualizar: ");
 	int id = scanner.nextInt();
 	scanner.nextLine();
 
@@ -222,48 +224,45 @@ public class RecursoView
 	    Recurso recurso = recursoDao.select(id);
 	    if (recurso == null)
 	    {
-		System.out.println("Recurso não encontrado.");
+		System.out.println("\nRecurso não encontrado.");
 		return;
 	    }
 
-	    System.out.println("Digite o novo tipo do recurso:");
+	    System.out.print("\nDigite o novo tipo do recurso: ");
 	    recurso.setTipo(scanner.next() + scanner.nextLine());
-
-	    System.out.println("Digite a nova quantidade do recurso:");
+	    System.out.print("\nDigite a nova quantidade do recurso: ");
 	    recurso.setQuantidade(scanner.nextInt());
 	    scanner.nextLine();
-
-	    System.out.println("Digite o novo custo unitário do recurso:");
+	    System.out.print("\nDigite o novo custo unitário do recurso: ");
 	    recurso.setCustoUnitario(scanner.nextDouble());
 	    scanner.nextLine();
-
-	    System.out.println("Digite o novo fornecedor do recurso:");
+	    System.out.print("\nDigite o novo fornecedor do recurso: ");
 	    recurso.setFornecedor(scanner.next() + scanner.nextLine());
 
 	    List<Projeto> projetos = projetoDao.search();
 
 	    if (projetos.isEmpty())
 	    {
-		System.out.println("Nenhum projeto encontrado. Operação de atualizar de recurso cancelada.");
+		System.out.println("\nNenhum projeto encontrado. Operação de atualizar de recurso cancelada.");
 		return;
 	    }
 
-	    System.out.println("Selecione o projeto para o recurso (ID):");
+	    System.out.println("\nSelecione o projeto para o recurso (ID)");
 	    for (Projeto projeto : projetos)
 	    {
-		System.out.println("ID: " + projeto.getIdProjeto() + " - Nome: " + projeto.getNome());
+		System.out.println("\nID: " + projeto.getIdProjeto() + " - Nome: " + projeto.getNome());
+		System.out.println("\n------------------------------------------------------------------------");
 	    }
 
 	    Projeto projetoSelecionado = null;
-
+		System.out.print("Projeto: ");
 	    while (projetoSelecionado == null)
 	    {
 		while (!scanner.hasNextInt())
 		{
-		    System.out.println("Entrada inválida. Por favor, digite um número inteiro correspondente ao ID do projeto.");
+		    System.out.println("\nEntrada inválida. Por favor, digite um número inteiro correspondente ao ID do projeto.");
 		    scanner.next();
 		}
-
 		int idProjeto = scanner.nextInt();
 		scanner.nextLine();
 
@@ -274,22 +273,22 @@ public class RecursoView
 
 		if (projetoSelecionado == null)
 		{
-		    System.out.println("ID do projeto inválido. Tente novamente.");
+		    System.out.println("\nID do projeto inválido. Tente novamente.");
 		}
 	    }
 
 	    recursoDao.update(recurso);
-	    System.out.println("Recurso atualizado com sucesso!");
+	    System.out.println("\nRecurso atualizado com sucesso!");
 
 	} catch (SQLException e)
 	{
-	    System.err.println("Erro ao atualizar recurso: " + e.getMessage());
+	    System.err.println("\nErro ao atualizar recurso: \n" + e.getMessage() + "\n");
 	}
     }
 
     private static void delete(Scanner scanner)
     {
-	System.out.println("Digite o código do recurso que deseja remover:");
+	System.out.print("\nDigite o código do recurso que deseja remover: ");
 	int id = scanner.nextInt();
 	scanner.nextLine();
 
@@ -300,24 +299,24 @@ public class RecursoView
 	    Recurso recurso = recursoDao.select(id);
 	    if (recurso == null)
 	    {
-		System.out.println("Recurso não encontrado.");
+		System.out.println("\nRecurso não encontrado.");
 		return;
 	    }
 
-	    System.out.println("Tem certeza que deseja remover o recurso " + recurso.getTipo() + "? (S/N)");
+	    System.out.print("\nTem certeza que deseja remover o recurso " + recurso.getTipo() + "? (S/N): ");
 	    String confirmacao = scanner.nextLine();
 	    if (!confirmacao.equalsIgnoreCase("S"))
 	    {
-		System.out.println("Operação cancelada.");
+		System.out.println("\nOperação cancelada.");
 		return;
 	    }
 
 	    recursoDao.delete(id);
-	    System.out.println("Recurso removido com sucesso!");
+	    System.out.println("\nRecurso removido com sucesso!");
 
 	} catch (SQLException | NotFoundException e)
 	{
-	    System.err.println("Erro ao remover recurso: " + e.getMessage());
+	    System.err.println("\nErro ao remover recurso: \n" + e.getMessage() + "\n");
 	}
     }
 

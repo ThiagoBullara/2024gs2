@@ -88,31 +88,32 @@ public class RecursoDao implements AutoCloseable
     {
 	String sql = """
                  SELECT 
-		    Recurso.idRecurso AS id,
+		    Recurso.id_recurso AS id,
 		    Recurso.tipo AS tipo,
 		    Recurso.quantidade AS quantidade,
-		    Recurso.custoUnitario AS custoUnitario,
+		    Recurso.custo_unitario AS custoUnitario,
 		    Recurso.fornecedor AS fornecedor,
-		    Projeto.id AS 'projeto.id',
-		    Projeto.nome AS 'projeto.nome',
-		    Projeto.tipo AS 'projeto.tipo',
-		    Projeto.descricao AS 'projeto.descricao',
-		    Projeto.status AS 'projeto.status',
-		    Projeto.localizacao AS 'projeto.localizacao',
-		    Projeto.duracao AS 'projeto.duracao',
-		    Projeto.orcamento AS 'projeto.orcamento',
-		    Projeto.dataInicio AS 'projeto.dataInicio',
-		    Projeto.dataTermino AS 'projeto.dataTermino',
-		    Gestor.id AS 'gestor.id',
-		    Gestor.nome AS 'gestor.nome',
-		    Gestor.email AS 'gestor.email',
-		    Gestor.telefone AS 'gestor.telefone',
-		    Gestor.descricao AS 'gestor.descricao',
-		    Equipe.id AS 'equipe.id',
-		    Equipe.especialidade AS 'equipe.especialidade',
-		    Equipe.email AS 'equipe.email',
-		    Equipe.descricao AS 'equipe.descricao',
-		    Equipe.qntFuncionarios AS 'equipe.qntFuncionarios'
+		    Projeto.id_projeto AS "projeto.id",
+		    Projeto.nome AS "projeto.nome",
+		    Projeto.tipo AS "projeto.tipo",
+		    Projeto.descricao AS "projeto.descricao",
+		    Projeto.status AS "projeto.status",
+		    Projeto.localizacao AS "projeto.localizacao",
+		    Projeto.duracao AS "projeto.duracao",
+		    Projeto.orcamento AS "projeto.orcamento",
+		    Projeto.dataInicio AS "projeto.dataInicio",
+		    Projeto.dataTermino AS "projeto.dataTermino",
+		    Gestor.id_gestor AS "gestor.id",
+		    Gestor.nome AS "gestor.nome",
+		    Gestor.email AS "gestor.email",
+		    Gestor.telefone AS "gestor.telefone",
+		    Gestor.descricao AS "gestor.descricao",
+		    Equipe.id_equipe AS "equipe.id",
+			Equipe.nome AS "equipe.nome",
+		    Equipe.especialidade AS "equipe.especialidade",
+		    Equipe.email AS "equipe.email",
+		    Equipe.descricao AS "equipe.descricao",
+		    Equipe.qtd_funcionarios AS "equipe.qtdFuncionarios"
                  FROM
                     Recurso
 				 JOIN
@@ -178,39 +179,40 @@ public class RecursoDao implements AutoCloseable
     {
 	String sql = """
 		SELECT 
-		    Recurso.idRecurso AS id,
+		    Recurso.id_recurso AS id,
 		    Recurso.tipo AS tipo,
 		    Recurso.quantidade AS quantidade,
-		    Recurso.custoUnitario AS custoUnitario,
+		    Recurso.custo_unitario AS custoUnitario,
 		    Recurso.fornecedor AS fornecedor,
-		    Projeto.id AS 'projeto.id',
-		    Projeto.nome AS 'projeto.nome',
-		    Projeto.tipo AS 'projeto.tipo',
-		    Projeto.descricao AS 'projeto.descricao',
-		    Projeto.status AS 'projeto.status',
-		    Projeto.localizacao AS 'projeto.localizacao',
-		    Projeto.duracao AS 'projeto.duracao',
-		    Projeto.orcamento AS 'projeto.orcamento',
-		    Projeto.dataInicio AS 'projeto.dataInicio',
-		    Projeto.dataTermino AS 'projeto.dataTermino',
-		    Gestor.id AS 'gestor.id',
-		    Gestor.nome AS 'gestor.nome',
-		    Gestor.email AS 'gestor.email',
-		    Gestor.telefone AS 'gestor.telefone',
-		    Gestor.descricao AS 'gestor.descricao',
-		    Equipe.id AS 'equipe.id',
-		    Equipe.especialidade AS 'equipe.especialidade',
-		    Equipe.email AS 'equipe.email',
-		    Equipe.descricao AS 'equipe.descricao',
-		    Equipe.qntFuncionarios AS 'equipe.qntFuncionarios'
-		    FROM
-		    	Recurso
-			JOIN
-		    	Projeto ON Recurso.FK_id_projeto = Projeto.id_projeto
-			JOIN
-		    	Gestor ON Projeto.FK_id_gestor = Gestor.id_gestor
-			JOIN
-		    	Equipe ON Projeto.FK_id_equipe = Equipe.id_equipe""";
+		    Projeto.id_projeto AS "projeto.id",
+		    Projeto.nome AS "projeto.nome",
+		    Projeto.tipo AS "projeto.tipo",
+		    Projeto.descricao AS "projeto.descricao",
+		    Projeto.status AS "projeto.status",
+		    Projeto.localizacao AS "projeto.localizacao",
+		    Projeto.duracao AS "projeto.duracao",
+		    Projeto.orcamento AS "projeto.orcamento",
+		    Projeto.dataInicio AS "projeto.dataInicio",
+		    Projeto.dataTermino AS "projeto.dataTermino",
+		    Gestor.id_gestor AS "gestor.id",
+		    Gestor.nome AS "gestor.nome",
+		    Gestor.email AS "gestor.email",
+		    Gestor.telefone AS "gestor.telefone",
+		    Gestor.descricao AS "gestor.descricao",
+		    Equipe.id_equipe AS "equipe.id",
+			Equipe.nome AS "equipe.nome",
+		    Equipe.especialidade AS "equipe.especialidade",
+		    Equipe.email AS "equipe.email",
+		    Equipe.descricao AS "equipe.descricao",
+		    Equipe.qtd_funcionarios AS "equipe.qtdFuncionarios"
+                 FROM
+                    Recurso
+				 JOIN
+		   			Projeto ON Recurso.FK_id_projeto = Projeto.id_projeto
+                 JOIN
+                    Gestor ON Projeto.FK_id_gestor = Gestor.id_gestor
+                 JOIN
+                    Equipe ON Projeto.FK_id_equipe = Equipe.id_equipe""";
 
 	List<Recurso> lista = new ArrayList<>();
 
@@ -227,35 +229,35 @@ public class RecursoDao implements AutoCloseable
 		LocalDateTime projetoDataTermino = dataTimestamp2 != null ? dataTimestamp2.toLocalDateTime() : null;
 
 		lista.add(new Recurso()
-			.setIdRecurso(result.getInt("id"))
-			.setTipo(result.getString("tipo"))
-			.setQuantidade(result.getInt("quantidade"))
-			.setCustoUnitario(result.getDouble("custoUnitario"))
-			.setFornecedor(result.getString("fornecedor"))
-			.setProjeto(new Projeto()
-			    .setIdProjeto(result.getInt("id"))
-			    .setNome(result.getString("nome"))
-			    .setTipo(result.getString("tipo"))
-			    .setDescricao(result.getString("descricao"))
-			    .setStatus(result.getString("status"))
-			    .setLocalizacao(result.getString("localizacao"))
-			    .setDuracao(result.getInt("duracao"))
-			    .setOrcamento(result.getDouble("orcamento"))
-			    .setDataInicio(projetoDataInicio)
-			    .setDataTermino(projetoDataTermino)
-			    .setGestor(new Gestor()
-				.setIdGestor(result.getInt("gestor.id"))
-				.setNome(result.getString("gestor.nome"))
-				.setEmail(result.getString("gestor.email"))
-				.setTelefone(result.getString("gestor.telefone"))
-				.setDescricao(result.getString("gestor.descricao")))
-			    .setEquipe(new Equipe()
-				.setIdEquipe(result.getInt("equipe.id"))
-				.setNome(result.getString("equipe.nome"))
-				.setEspecialidade(result.getString("equipe.especialidade"))
-				.setEmail(result.getString("equipe.email"))
-				.setDescricao(result.getString("equipe.descricao"))
-				.setQtdFuncionarios(result.getInt("equipe.qtdFuncionarios")))));
+		.setIdRecurso(result.getInt("id"))
+		.setTipo(result.getString("tipo"))
+		.setQuantidade(result.getInt("quantidade"))
+		.setCustoUnitario(result.getDouble("custoUnitario"))
+		.setFornecedor(result.getString("fornecedor"))
+		.setProjeto(new Projeto()
+			.setIdProjeto(result.getInt("projeto.id"))
+			.setNome(result.getString("projeto.nome"))
+			.setTipo(result.getString("projeto.tipo"))
+			.setDescricao(result.getString("projeto.descricao"))
+			.setStatus(result.getString("projeto.status"))
+			.setLocalizacao(result.getString("projeto.localizacao"))
+			.setDuracao(result.getInt("projeto.duracao"))
+			.setOrcamento(result.getDouble("projeto.orcamento"))
+			.setDataInicio(projetoDataInicio)
+			.setDataTermino(projetoDataTermino)
+			.setGestor(new Gestor()
+			.setIdGestor(result.getInt("gestor.id"))
+			.setNome(result.getString("gestor.nome"))
+			.setEmail(result.getString("gestor.email"))
+			.setTelefone(result.getString("gestor.telefone"))
+			.setDescricao(result.getString("gestor.descricao")))
+			.setEquipe(new Equipe()
+			.setIdEquipe(result.getInt("equipe.id"))
+			.setNome(result.getString("equipe.nome"))
+			.setEspecialidade(result.getString("equipe.especialidade"))
+			.setEmail(result.getString("equipe.email"))
+			.setDescricao(result.getString("equipe.descricao"))
+			.setQtdFuncionarios(result.getInt("equipe.qtdFuncionarios")))));
 	    }
 	}
 
@@ -264,7 +266,7 @@ public class RecursoDao implements AutoCloseable
 
     public void update(Recurso recurso) throws SQLException
     {
-	PreparedStatement stm = conexao.prepareStatement("UPDATE Recurso SET tipo = ?, quantidade = ?, custoUnitario = ?, fornecedor = ?, Projeto_id = ? where Recurso.idRecurso= ?");
+	PreparedStatement stm = conexao.prepareStatement("UPDATE Recurso SET tipo = ?, quantidade = ?, custo_unitario = ?, fornecedor = ?, FK_id_projeto = ? where Recurso.id_recurso= ?");
 	stm.setString(1, recurso.getTipo());
 	stm.setInt(2, recurso.getQuantidade());
 	stm.setDouble(3, recurso.getCustoUnitario());
